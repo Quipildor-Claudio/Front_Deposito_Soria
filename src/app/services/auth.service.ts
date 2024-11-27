@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URI } from '../../../config/config';
 import { Router } from '@angular/router';
+import { User } from '../models/user';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,10 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+
+  get(id: any): Observable<User> {
+    return this.http.get<User>(`${API_URI}/auth/user/${id}`);
   }
 
   isLoggedIn():boolean {
