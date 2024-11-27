@@ -20,10 +20,13 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
-    
   }
 
-  isLoggedIn() {
-    return !!localStorage.getItem('token');
+  isLoggedIn():boolean {
+    if (typeof window !== 'undefined' && !!localStorage.getItem('token')) {
+      return true;
+    }else{
+      return false;
+    }
   }
 }
