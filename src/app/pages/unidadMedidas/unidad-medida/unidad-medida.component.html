@@ -30,7 +30,7 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                  <button type="button" class="btn btn-primary">Agregar</button>
+                  <button type="button" class="btn btn-primary" [routerLink]="['/unidad']">Agregar</button>
                 </h3>
   
                 <div class="card-tools">
@@ -74,7 +74,7 @@
                           <button
                             type="button"
                             class="btn btn-warning"
-                            [routerLink]="['/tipo', item._id]"
+                            [routerLink]="['/unidad', item._id]"
                           >
                             <i class="fa fa-pen"></i></button
                           >&nbsp;

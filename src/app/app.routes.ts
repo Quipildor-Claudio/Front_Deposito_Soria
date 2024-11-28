@@ -8,19 +8,40 @@ import { MarcaComponent } from './pages/marcas/marca/marca.component';
 import { UnidadMedida } from './models/unidad-medida';
 import { ProductoComponent } from './pages/productos/producto/producto.component';
 import { UnidadMedidaComponent } from './pages/unidadMedidas/unidad-medida/unidad-medida.component';
+import { AddTipoComponent } from './pages/tipos/add-tipo/add-tipo.component';
+import { AddMarcaComponent } from './pages/marcas/add-marca/add-marca.component';
+import { AddUnidadMedidaComponent } from './pages/unidadMedidas/add-unidad-medida/add-unidad-medida.component';
+import { AddProductoComponent } from './pages/productos/add-producto/add-producto.component';
 
 
 export const routes: Routes = [
     { path: 'login', component: LoguinComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-    { path: 'tipos', component: TipoComponent },
 
     { path: 'marcas', component: MarcaComponent },
+    { path: 'marca', component: AddMarcaComponent },
+    { path: 'marca/:id', component: AddMarcaComponent },
+
+    { path: 'tipos', component: TipoComponent },
+    { path: 'tipo', component: AddTipoComponent },
+    { path: 'tipo/:id', component: AddTipoComponent },
+
+
 
     { path: 'unidades', component: UnidadMedidaComponent },
+    { path: 'unidad', component: AddUnidadMedidaComponent },
+    { path: 'unidad/:id', component: AddUnidadMedidaComponent },
+
+
 
     { path: 'productos', component: ProductoComponent },
+    { path: 'producto', component: AddProductoComponent },
+    { path: 'producto/:id', component: AddProductoComponent },
+
+
+
+
 
 
     // { path: '**', redirectTo: 'login' },

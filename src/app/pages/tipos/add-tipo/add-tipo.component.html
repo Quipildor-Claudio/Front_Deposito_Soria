@@ -1,1 +1,50 @@
-<p>add-tipo works!</p>
+<div class="content">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">{{ isEdit ? 'Editar Familia' : 'Nueva Familia' }}</h3>
+            </div>
+            <form [formGroup]="tipoForm" (ngSubmit)="saveTipo()">
+              <div class="card-body">
+                <!-- Nombre -->
+                <div class="form-group">
+                  <label for="name">Nombre</label>
+                  <input
+                    type="text"
+                    id="name"
+                    class="form-control"
+                    formControlName="name"
+                    [class.is-invalid]="tipoForm.get('name')?.invalid && tipoForm.get('name')?.touched"
+                    placeholder="Ingrese el nombre de la Familia"
+                  />
+                  <div *ngIf="tipoForm.get('name')?.invalid && tipoForm.get('name')?.touched" class="invalid-feedback">
+                    El nombre es obligatorio y debe tener al menos 3 caracteres.
+                  </div>
+                </div>
+  
+                <!-- Observación -->
+                <div class="form-group">
+                  <label for="observacion">Observación</label>
+                  <textarea
+                    id="observacion"
+                    class="form-control"
+                    formControlName="observacion"
+                    placeholder="Ingrese una observación (opcional)"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary" [disabled]="tipoForm.invalid">
+                  {{ isEdit ? 'Actualizar' : 'Guardar' }}
+                </button>
+                <button type="button" class="btn btn-secondary" [routerLink]="['/tipos']">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

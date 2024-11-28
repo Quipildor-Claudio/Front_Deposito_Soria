@@ -1,1 +1,88 @@
-<p>add-producto works!</p>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ isEdit ? 'Editar Articulo' : 'Nueva Articulo' }}</h3>
+                    </div>
+                    <form [formGroup]="productoForm" (ngSubmit)="saveTipo()">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="name">Nombre del Producto</label>
+                                <input type="text" id="name" class="form-control" formControlName="name"
+                                    placeholder="Ingrese el nombre del producto" />
+                                <div *ngIf="productoForm.get('name')?.invalid && productoForm.get('name')?.touched"
+                                    class="text-danger">
+                                    El nombre es obligatorio.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="price">Precio</label>
+                                <input type="number" id="price" class="form-control" formControlName="price"
+                                    placeholder="Ingrese el precio del producto" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="stock">Stock</label>
+                                <input type="number" id="stock" class="form-control" formControlName="stock"
+                                    placeholder="Ingrese el stock" />
+                                <div *ngIf="productoForm.get('stock')?.invalid && productoForm.get('stock')?.touched"
+                                    class="text-danger">
+                                    El stock es obligatorio y debe ser mayor o igual a 0.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="observation">Observación</label>
+                                <textarea id="observation" class="form-control" formControlName="observation"
+                                    placeholder="Ingrese alguna observación"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tipo">Familia</label>
+                                <select id="tipo" class="form-control" formControlName="tipo">
+                                    <option [value]="null">Seleccione Familia</option>
+                                    <option *ngFor="let tipo of tipos" [value]="tipo._id">
+                                        {{ tipo.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label for="unidad">Unidad de Medida</label>
+                                <select id="unidad" class="form-control" formControlName="unidad">
+                                    <option [value]="null">Seleccione una unidad</option>
+                                    <option *ngFor="let unidad of unidades" [value]="unidad._id">
+                                        {{ unidad.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="marca">Marca</label>
+                                <select id="marca" class="form-control" formControlName="marca">
+                                    <option [value]="null">Seleccione una marca</option>
+                                    <option *ngFor="let marca of marcas" [value]="marca._id">
+                                        {{ marca.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary" [disabled]="productoForm.invalid">
+                                {{ isEdit ? 'Actualizar' : 'Guardar' }}
+                            </button>
+                            <button type="button" class="btn btn-secondary"
+                                [routerLink]="['/productos']">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
