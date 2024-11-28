@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TipoService } from '../../services/tipo.service';
-import { Tipo } from '../../models/tipo';
+
 import { RouterLink } from '@angular/router';
+import { Tipo } from '../../../models/tipo';
+import { TipoService } from '../../../services/tipo.service';
 
 @Component({
   selector: 'app-tipo',

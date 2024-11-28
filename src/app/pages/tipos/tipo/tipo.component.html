@@ -57,14 +57,17 @@
                   <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Observacion</th>
+
                     <th>Accion</th>
                   </tr>
                 </thead>
                 <tbody>
                   @for (item of familias; track $index) {
                   <tr>
-                    <td>{{ $index }}</td>
+                    <td>{{ $index+1 }}</td>
                     <td>{{ item.name }}</td>
+                    <td>{{ item.observacion }}</td>
 
                     <td>
                       <div class="btn-group">
