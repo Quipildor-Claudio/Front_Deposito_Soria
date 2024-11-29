@@ -8,6 +8,7 @@ export class Producto {
     price?: number; // Precio del producto, opcional
     stock: number; // Stock del producto, requerido con valor predeterminado de 0
     observation?: string; // Observación, opcional con valor predeterminado de ''
+    min?: number;
     marca?: Marca; // ID de la marca (referencia)
     tipo?: Tipo; // ID del tipo (referencia)
     unidad?: UnidadMedida; // ID de la unidad de medida (referencia)

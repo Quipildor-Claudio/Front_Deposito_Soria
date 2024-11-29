@@ -12,6 +12,8 @@ import { AddTipoComponent } from './pages/tipos/add-tipo/add-tipo.component';
 import { AddMarcaComponent } from './pages/marcas/add-marca/add-marca.component';
 import { AddUnidadMedidaComponent } from './pages/unidadMedidas/add-unidad-medida/add-unidad-medida.component';
 import { AddProductoComponent } from './pages/productos/add-producto/add-producto.component';
+import { SuministroComponent } from './pages/suministro/suministro.component';
+import { IngresoComponent } from './pages/ingreso/ingreso.component';
 
 
 export const routes: Routes = [
@@ -39,10 +41,12 @@ export const routes: Routes = [
     { path: 'producto', component: AddProductoComponent },
     { path: 'producto/:id', component: AddProductoComponent },
 
+    { path: 'suministro', component: SuministroComponent },
+    { path: 'suministro/:id', component: SuministroComponent },
 
 
-
-
+    { path: 'ingreso', component: IngresoComponent },
+    { path: 'ingreso/:id', component: IngresoComponent },
 
     // { path: '**', redirectTo: 'login' },
 ];
