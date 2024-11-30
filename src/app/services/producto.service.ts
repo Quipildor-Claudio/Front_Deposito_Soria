@@ -31,4 +31,7 @@ export class ProductoService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${API_URI}/producto/${id}`);
   }
+  searchProductsNom(nom: string): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${API_URI}/searchnom?name=${nom}`);
+  }
 }

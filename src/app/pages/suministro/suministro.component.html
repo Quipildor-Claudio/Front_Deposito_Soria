@@ -1,1 +1,84 @@
-<p>suministro works!</p>
+<div class="content-header">
+    <div class="container-fluid">
+        <h1 class="m-0 text-center">{{title}}</h1>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- Card para buscar productos -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Buscar Productos</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" name="name" [formControl]="searchControl" class="form-control"
+                            placeholder="Buscar por nombre ">
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table id="productTable" class="table table-bordered table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Familia</th>
+                                <th>Unidad</th>
+                                <th>Marca</th>
+                                <th>Obs</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of productos; track $index) {
+                            <tr>
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.tipo?.name ?? "-"}}</td>
+                                <td>{{ item.unidad?.name ?? "-"}}</td>
+                                <td>{{ item.marca?.name ?? "-" }}</td>
+                                <td>{{ item.observation }}</td>
+
+                                <td><button class="btn btn-primary btn-sm select-btn">Seleccionar</button></td>
+
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para lista de productos seleccionados -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Lista de Productos Seleccionados</h3>
+            </div>
+            <div class="card-body">
+                <table id="selectedTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se agregarán dinámicamente -->
+                    </tbody>
+                </table>
+                <div class="mt-3">
+                    <button class="btn btn-success" id="btnAceptar">Aceptar</button>
+                    <button class="btn btn-danger" id="btnLimpiar">Limpiar</button>
+                    <button class="btn btn-secondary" id="btnImprimir">Imprimir</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
