@@ -14,5 +14,6 @@ export class Producto {
     unidad?: UnidadMedida; // ID de la unidad de medida (referencia)
     createdAt?: string; // Fecha de creación, generada automáticamente
     updatedAt?: string; // Fecha de actualización, generada automáticamente
+   cantidad?:number;
 }
 

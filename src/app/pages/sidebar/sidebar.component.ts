@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, Pipe } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { JwtService } from '../../services/jwt.service';
 import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,11 +20,7 @@ export class SidebarComponent implements OnInit {
     this.currentUser =  new User();
   }
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    const userId = this.jwtService.getUserIdFromToken(token);
-    this.authService.get(userId).subscribe(res=>{
-      this.currentUser=res;
-    });
+    this.authService.getUserTk().subscribe(res=>this.currentUser=res);
    
   }
 
