@@ -4,6 +4,7 @@ import { NavbarComponent } from "./pages/navbar/navbar.component";
 import { SidebarComponent } from "./pages/sidebar/sidebar.component";
 import { AuthService } from './services/auth.service';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,

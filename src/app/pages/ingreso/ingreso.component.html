@@ -1,79 +1,120 @@
-
 <div class="content-header">
     <div class="container-fluid">
-        <h1 class="m-0 text-center">Gestión de Pedidos</h1>
+        <h1 class="m-0 text-center">{{ title }}</h1>
     </div>
 </div>
+
 <div class="content">
     <div class="container-fluid">
+        <form [formGroup]="movFrom" (ngSubmit)="saveTipo()">
+            <!-- Card para buscar productos -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Buscar Articulos</h3>
+                </div>
 
-        <!-- Card para buscar productos -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Buscar Productos</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o código">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="name" [formControl]="searchControl" class="form-control"
+                                placeholder="Buscar por nombre">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select id="service" class="form-control" formControlName="service">
+                                    <option [value]="null">Seleccione un Servicio</option>
+                                    <option *ngFor="let servicio of servicios" [value]="servicio._id">
+                                        {{ servicio.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table id="productTable" class="table table-bordered table-striped mt-3">
+                            <thead>
+                                <tr>
+                                    <th>Cod</th>
+                                    <th>Nombre</th>
+                                    <th>Stock</th>
+                                    <th>Familia</th>
+                                    <th>Unidad</th>
+                                    <th>Marca</th>
+                                    <th>Obs</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of products; index as i">
+                                    <td>{{ item?.code ?? '-'}}</td>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.stock }}</td>
+                                    <td>{{ item.tipo?.name ?? '-' }}</td>
+                                    <td>{{ item.unidad?.name ?? '-' }}</td>
+                                    <td>{{ item.marca?.name ?? '-' }}</td>
+                                    <td>{{ item.observation }}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm select-btn"
+                                            (click)="addPro(item)">Seleccionar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <table id="productTable" class="table table-bordered table-striped mt-3">
-                    <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Acción</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Ejemplo de datos (puedes cargar dinámicamente con JavaScript) -->
-                    <tr>
-                        <td>001</td>
-                        <td>Producto A</td>
-                        <td>$10.00</td>
-                        <td><button class="btn btn-primary btn-sm select-btn">Seleccionar</button></td>
-                    </tr>
-                    <tr>
-                        <td>002</td>
-                        <td>Producto B</td>
-                        <td>$20.00</td>
-                        <td><button class="btn btn-primary btn-sm select-btn">Seleccionar</button></td>
-                    </tr>
-                    </tbody>
-                </table>
             </div>
-        </div>
 
-        <!-- Card para lista de productos seleccionados -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Lista de Productos Seleccionados</h3>
-            </div>
-            <div class="card-body">
-                <table id="selectedTable" class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Subtotal</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Los datos se agregarán dinámicamente -->
-                    </tbody>
-                </table>
-                <div class="mt-3">
-                    <button class="btn btn-success" id="btnAceptar">Aceptar</button>
-                    <button class="btn btn-danger" id="btnLimpiar">Limpiar</button>
-                    <button class="btn btn-secondary" id="btnImprimir">Imprimir</button>
+            <!-- Card para lista de productos seleccionados -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Productos Seleccionados</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table id="selectedTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>R</th>
+                                    <th>Nombre</th>
+                                    <th>U.M</th>
+                                    <th>Cant</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let comprobante of comprobantes; index as i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ comprobante.product.name }}</td>
+                                    <td>{{ comprobante.product.unidad?.name ?? '-' }}</td>
+                                    <td>
+                                        <input type="number" class="form-control" [value]="comprobante.cantidad"
+                                            (change)="actualizarCantidad(comprobante, $event)" min="1">
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm"
+                                            (click)="eliminarProducto(comprobante._id)">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="observation">Observación</label>
+                            <textarea id="observation" class="form-control" formControlName="observacion"
+                                placeholder="Ingrese alguna observación"></textarea>
+                        </div>
+                    </div>
+                 
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success" id="btnAceptar">Aceptar</button>
+                    <button type="button" class="btn btn-danger" id="btnLimpiar"
+                        (click)="limpiarLista()">Limpiar</button>
+                    <button type="button" class="btn btn-secondary" id="btnImprimir">Imprimir</button>
                 </div>
             </div>
-        </div>
-
+        </form>
     </div>
 </div>

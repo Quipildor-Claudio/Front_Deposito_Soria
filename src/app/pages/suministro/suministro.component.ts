@@ -9,9 +9,9 @@ import { CommonModule } from '@angular/common';
 import { ServicioService } from '../../services/servicio.service';
 import { AuthService } from '../../services/auth.service';
 import { Service } from '../../models/service';
-import { Movimiento } from '../../models/movimiento';
 import { MovimentService } from '../../services/moviment.service';
-
+import { JwtService } from '../../services/jwt.service';
+import { Comprobante } from '../../models/comprobante';
 
 @Component({
   selector: 'app-suministro',
@@ -21,132 +21,106 @@ import { MovimentService } from '../../services/moviment.service';
   styleUrl: './suministro.component.css'
 })
 export class SuministroComponent implements OnInit {
+  title: string = "Suministro";
   searchControl = new FormControl('');
-  searchId: string = '';
-  searchName: string = '';
   authService = inject(AuthService);
   productoService = inject(ProductoService);
   serService = inject(ServicioService);
   movService = inject(MovimentService);
-
+  jwtService = inject(JwtService);
+  products: Producto[] = []; // lsita de productos buscados
+  comprobantes: Comprobante[] = [];
   servicios: Service[] = [];
-  productos: Producto[] = [];
-  products: Producto[] = [];
-  currentProducto: Producto;
-  title: string = "Suminstro";
-  producto: Producto;
   movFrom!: FormGroup;
-  constructor(private fb: FormBuilder,) {
-    this.currentProducto = new Producto();
-    this.producto = new Producto();
-
+  userId: string;
+  constructor(private fb: FormBuilder) {
 
   }
 
   ngOnInit(): void {
-    this.getServicios();
-    // Inicializar formulario
-
-    // Inicializar formulario
+    if (typeof window !== 'undefined' && localStorage) {
+      const token = localStorage.getItem('token');
+      this.userId = this.jwtService.getUserIdFromToken(token);
+    }
     this.movFrom = this.fb.group({
-      products: [null],
       service: [null],
-      quantity: 0,
-      user: [null],
-      hora: [null],
       observacion: [null],
+      user: this.userId,
     });
 
     this.searchControl.valueChanges
       .pipe(
-        debounceTime(300), // Espera 300 ms después de que el usuario deja de escribir
-        distinctUntilChanged(), // Evita realizar la misma búsqueda consecutivamente
+        debounceTime(300),
+        distinctUntilChanged(),
         switchMap((value: string) => {
           if (value) {
-
             return this.productoService.searchProductsNom(value).pipe(
-              catchError(() => of([])) // En caso de error, retorna un array vacío
+              catchError(() => of([]))
             );
-
           } else {
-            return of([]); // Si el valor está vacío, retorna un array vacío
+            return of([]);
           }
         })
       )
       .subscribe((result) => {
-        if (Array.isArray(result)) {
-          this.productos = result;
-          this.producto = null;
-        } else {
-          this.producto = result;
-          this.productos = [];
-        }
+        this.products = Array.isArray(result) ? result : [];
       });
 
+    this.getServicios();
   }
-
   getServicios() {
     this.serService.getAll().subscribe(res => this.servicios = res);
   }
-  addPro(item: any) {
-    if (item) {
-      const existe = this.products.find(prod => prod._id === item._id);
+  addPro(producto: Producto) {
+    if (producto) {
+      const existe = this.comprobantes.find(
+        (comprobante) => comprobante.product._id === producto._id
+      );
       if (!existe) {
-        this.products.push({
-          ...item,
-          cantidad: new FormControl(1), // Cantidad inicial
+        this.comprobantes.push({
+          product: producto,
+          cantidad: 0, // Por defecto, cantidad inicial es 1
         });
-
-        console.log(this.products);
-        this.productos = [];
+        this.products = [];
         this.searchControl.reset();
-      } else {
-        alert('El producto ya está en la lista.');
       }
+
     }
-
   }
+  saveTipo(): void {
 
-  eliminarProducto(codigo: string) {
-    this.products = this.products.filter(item => item._id !== codigo);
-  }
-  limpiarLista() {
-    this.products = [];
-  }
-
-  saveTipo() {
-    const movData: Movimiento = this.movFrom.value;
-    movData.products = this.products.map(prod => ({
-      ...prod,
-      cantidad: prod.cantidad?.value, // Extraer el valor del FormControl
-    }));
+    const movData = this.movFrom.value;
+    movData.type = 'OUT';
     movData.hora = this.obtenerHoraActual();
+    movData.comprobantes = this.comprobantes;
     this.authService.getUserTk().subscribe(res => movData.user = res);
-    movData.type = "OUT";
-    if (movData.products.length > 0) {
+    if (movData.comprobantes.length > 0) {
       console.log(movData);
-      this.productoService.actualizarStock(this.products).subscribe();
-      this.movService.create(movData).subscribe();
-      this.products = [];
-    }
-  }
-
-  actualizarCantidad(producto: any, $event) {
-    const prod = this.products.find(item => item._id === producto._id);
-    if (prod) {
-      prod.cantidad.setValue($event.target.value); // Actualizar el FormControl
+      this.productoService.actualizarStock(movData.comprobantes, "OUT").subscribe();
+      this.movService.create(movData).subscribe((res) => {
+        alert('Guardado exitosamente.');
+        this.limpiarLista();
+      });
     } else {
-      console.error('Producto no encontrado.');
+      alert('Debe agregar al menos un producto.');
     }
   }
 
+  actualizarCantidad(comprobante: Comprobante, $event): void {
+    comprobante.cantidad = Number($event.target.value); // Actualiza la cantidad del comprobante
+  }
 
-  obtenerHoraActual = (): string => {
+  eliminarProducto(id: string): void {
+    this.comprobantes = this.comprobantes.filter((comprobante) => comprobante._id !== id);
+  }
+
+  limpiarLista(): void {
+    this.comprobantes = [];
+  }
+  obtenerHoraActual(): string {
     const ahora = new Date();
-    const horas = ahora.getHours().toString().padStart(2, '0'); // Formatea a dos dígitos
+    const horas = ahora.getHours().toString().padStart(2, '0');
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
-
     return `${horas}:${minutos}`;
-  };
-
+  }
 }

@@ -21,7 +21,7 @@ export class MovimentService {
     return this.http.get<Movimiento>(`${API_URI}/movimiento/${id}`);
   }
 
-  create(data: any): Observable<any> {
+  create(data: Movimiento): Observable<any> {
     return this.http.post(`${API_URI}/movimiento`, data);
   }
 

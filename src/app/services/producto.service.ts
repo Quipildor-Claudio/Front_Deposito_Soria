@@ -34,7 +34,8 @@ export class ProductoService {
   searchProductsNom(nom: string): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${API_URI}/searchnom?name=${nom}`);
   }
-  actualizarStock(productos: any[]): Observable<any> {
-    return this.http.post(`${API_URI}/actualizar-stock`, productos);
+  actualizarStock(comprobantes: any[],type:string): Observable<any> {
+    const payload = { comprobantes, type };
+    return this.http.post(`${API_URI}/actualizar-stock`, payload);
   }
 }
