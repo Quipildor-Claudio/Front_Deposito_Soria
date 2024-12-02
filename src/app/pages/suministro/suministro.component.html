@@ -88,7 +88,13 @@
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.unidad?.name ?? "-"}}</td>
                                 <td>
-                                    <input type="number"  min="1"   [(ngModel)]="item.cantidad" (change)="actualizarCantidad(item,item.cantidad)"                                     class="form-control" >
+                                    <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    [formControl]="item.cantidad" 
+                                    (change)="actualizarCantidad(item, $event)" 
+                                    min="1" />
+                                                   
                                 </td>
                                 <td>
                                     <button class="btn btn-danger btn-sm"

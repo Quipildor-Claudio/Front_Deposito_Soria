@@ -1,3 +1,4 @@
+import { FormControl } from "@angular/forms";
 import { Marca } from "./marca";
 import { Tipo } from "./tipo";
 import { UnidadMedida } from "./unidad-medida";
@@ -14,6 +15,7 @@ export class Producto {
     unidad?: UnidadMedida; // ID de la unidad de medida (referencia)
     createdAt?: string; // Fecha de creación, generada automáticamente
     updatedAt?: string; // Fecha de actualización, generada automáticamente
-   cantidad?:number;
+    cantidad?: FormControl; 
+    codigo?:string;
 }
 

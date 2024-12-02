@@ -5,7 +5,6 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { TipoComponent } from './pages/tipos/tipo/tipo.component';
 import { MarcaComponent } from './pages/marcas/marca/marca.component';
-import { UnidadMedida } from './models/unidad-medida';
 import { ProductoComponent } from './pages/productos/producto/producto.component';
 import { UnidadMedidaComponent } from './pages/unidadMedidas/unidad-medida/unidad-medida.component';
 import { AddTipoComponent } from './pages/tipos/add-tipo/add-tipo.component';
@@ -14,6 +13,7 @@ import { AddUnidadMedidaComponent } from './pages/unidadMedidas/add-unidad-medid
 import { AddProductoComponent } from './pages/productos/add-producto/add-producto.component';
 import { SuministroComponent } from './pages/suministro/suministro.component';
 import { IngresoComponent } from './pages/ingreso/ingreso.component';
+import { MovimientoComponent } from './pages/movimiento/movimiento.component';
 
 
 export const routes: Routes = [
@@ -47,6 +47,8 @@ export const routes: Routes = [
 
     { path: 'ingreso', component: IngresoComponent },
     { path: 'ingreso/:id', component: IngresoComponent },
+
+    { path: 'movimientos', component: MovimientoComponent },
 
     // { path: '**', redirectTo: 'login' },
 ];

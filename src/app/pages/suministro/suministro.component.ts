@@ -35,17 +35,7 @@ export class SuministroComponent implements OnInit {
   currentProducto: Producto;
   title: string = "Suminstro";
   producto: Producto;
-
   movFrom!: FormGroup;
-
-  seleccionados: {
-    codigo: string;
-    nombre: string;
-    precio: number;
-    cantidad: FormControl;
-
-  }[] = [];
-
   constructor(private fb: FormBuilder,) {
     this.currentProducto = new Producto();
     this.producto = new Producto();
@@ -99,15 +89,20 @@ export class SuministroComponent implements OnInit {
     this.serService.getAll().subscribe(res => this.servicios = res);
   }
   addPro(item: any) {
-    // const existe = this.productosSeleccionados.find(item => item._id === item._id);
- 
     if (item) {
-   
-      this.products.push(item);
-      console.log(this.products);
-      this.productos = [];
-      this.searchControl.reset();
+      const existe = this.products.find(prod => prod._id === item._id);
+      if (!existe) {
+        this.products.push({
+          ...item,
+          cantidad: new FormControl(1), // Cantidad inicial
+        });
 
+        console.log(this.products);
+        this.productos = [];
+        this.searchControl.reset();
+      } else {
+        alert('El producto ya está en la lista.');
+      }
     }
 
   }
@@ -118,25 +113,31 @@ export class SuministroComponent implements OnInit {
   limpiarLista() {
     this.products = [];
   }
+
   saveTipo() {
     const movData: Movimiento = this.movFrom.value;
-    movData.products = this.products;
+    movData.products = this.products.map(prod => ({
+      ...prod,
+      cantidad: prod.cantidad?.value, // Extraer el valor del FormControl
+    }));
     movData.hora = this.obtenerHoraActual();
     this.authService.getUserTk().subscribe(res => movData.user = res);
     movData.type = "OUT";
-
-    console.log(movData.products);
-    this.productoService.actualizarStock(this.products).subscribe();
-
-
-    // this.movService.create(movData).subscribe();
-
-
-
+    if (movData.products.length > 0) {
+      console.log(movData);
+      this.productoService.actualizarStock(this.products).subscribe();
+      this.movService.create(movData).subscribe();
+      this.products = [];
+    }
   }
 
-  actualizarCantidad(producto: any,cantidad:any) {
-    producto.cantidad = cantidad;
+  actualizarCantidad(producto: any, $event) {
+    const prod = this.products.find(item => item._id === producto._id);
+    if (prod) {
+      prod.cantidad.setValue($event.target.value); // Actualizar el FormControl
+    } else {
+      console.error('Producto no encontrado.');
+    }
   }
 
 
