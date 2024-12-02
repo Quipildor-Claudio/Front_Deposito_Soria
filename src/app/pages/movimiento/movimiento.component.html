@@ -40,6 +40,7 @@
                             <table class="table table-hover text-nowrap">
                                 <thead>
                                     <tr>
+                                        <th>A</th>
                                         <th>Código</th>
                                         <th>Fecha</th>
                                         <th>Hora</th>
@@ -48,11 +49,17 @@
                                         <th>Servicio</th>
                                         <th>Productos</th>
                                         <th>Observación</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @for (movimiento of movimientos; track $index) {
                                     <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-warning"
+                                                [routerLink]="['/vista', movimiento._id]">
+                                                <i class="fa fa-eye"></i></button>&nbsp;
+                                        </td>
                                         <td>{{ movimiento.code }}</td>
                                         <td>{{ movimiento.date }}</td>
                                         <td>{{ movimiento.hora }}</td>
@@ -68,6 +75,7 @@
                                             </ul>
                                         </td>
                                         <td>{{ movimiento.observacion }}</td>
+
                                     </tr>
                                     }
                                 </tbody>

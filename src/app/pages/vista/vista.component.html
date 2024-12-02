@@ -1,0 +1,66 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <!-- Información principal -->
+            <hr />
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Hospital Pablo Soria</strong> </p>
+                    <p><strong>Dirección Administrativa</strong> </p>
+                    <p><strong>{{service.name}}</strong></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
+                    <p><strong>Hora:</strong> {{ movimiento.hora }}</p>
+                    <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+                </div>
+            </div>
+            <hr />
+            <!-- Detalle de comprobantes -->
+            <h5>Detalle del Movimiento</h5>
+            <hr />
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Numero:</strong> 2024-{{ movimiento.code }}</p>
+                    <p><strong>Tipo:</strong> {{ getMovimientoTipo(movimiento.type) }}</p>
+                    <p><strong>Servicio:</strong> {{ movimiento.service.name }}</p>
+                    <p><strong>Observación:</strong> {{ movimiento.observacion }}</p>
+                </div>
+            </div>
+            <hr />
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Cod.</th>
+                        <th>Articulo Descripcion</th>
+                        <th>U.M</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let comprobante of movimiento.comprobantes">
+                        <td>{{ comprobante.product?.code ?? '-' }}</td>
+                        <td>{{ comprobante.product.name }}</td>
+                        <td>{{ comprobante.product.unidad.name }}</td>
+                        <td>{{ comprobante.cantidad }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr />
+            <!-- Sección de firmas -->
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <div class="border-top mt-4"></div>
+                    <p>Firma Entrega</p>
+
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="border-top mt-4"></div>
+                    <p>Firma Recepción</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

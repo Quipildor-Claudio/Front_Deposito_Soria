@@ -14,6 +14,7 @@ import { AddProductoComponent } from './pages/productos/add-producto/add-product
 import { SuministroComponent } from './pages/suministro/suministro.component';
 import { IngresoComponent } from './pages/ingreso/ingreso.component';
 import { MovimientoComponent } from './pages/movimiento/movimiento.component';
+import { VistaComponent } from './pages/vista/vista.component';
 
 
 export const routes: Routes = [
@@ -49,6 +50,8 @@ export const routes: Routes = [
     { path: 'ingreso/:id', component: IngresoComponent },
 
     { path: 'movimientos', component: MovimientoComponent },
+
+    { path: 'vista/:id', component: VistaComponent },
 
     // { path: '**', redirectTo: 'login' },
 ];

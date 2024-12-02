@@ -21,7 +21,7 @@ export class MovimientoComponent implements OnInit {
 
     this.movService.getAll().subscribe(res => {
       this.movimientos = res
-      console.log(res);
+     // console.log(res);
     });
   }
 }
