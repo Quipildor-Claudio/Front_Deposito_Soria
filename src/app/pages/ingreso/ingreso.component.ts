@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,11 @@ import { JwtService } from '../../services/jwt.service';
 import { Producto } from '../../models/producto';
 import { Comprobante } from '../../models/comprobante';
 import { Service } from '../../models/service';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Movimiento } from '../../models/movimiento';
+
+
 @Component({
   selector: 'app-ingreso',
   standalone: true,
@@ -32,6 +37,8 @@ export class IngresoComponent implements OnInit {
   servicios: Service[] = [];
   movFrom!: FormGroup;
   userId: string;
+  isIngreso:boolean=true;
+ 
   constructor(private fb: FormBuilder) {
 
   }
@@ -42,9 +49,14 @@ export class IngresoComponent implements OnInit {
       this.userId = this.jwtService.getUserIdFromToken(token);
     }
     this.movFrom = this.fb.group({
-      service: [null],
+      remito: [null, [Validators.required]],
+      proveedor: [null, [Validators.required]],
+      compra: [null, [Validators.required]],
+      expediente: [null, [Validators.required]],
+      total: [0],
       observacion: [null],
       user: this.userId,
+      
     });
 
     this.searchControl.valueChanges
@@ -65,11 +77,9 @@ export class IngresoComponent implements OnInit {
         this.products = Array.isArray(result) ? result : [];
       });
 
-    this.getServicios();
+
   }
-  getServicios() {
-    this.serService.getAll().subscribe(res => this.servicios = res);
-  }
+
   addPro(producto: Producto) {
     if (producto) {
       const existe = this.comprobantes.find(
@@ -92,13 +102,16 @@ export class IngresoComponent implements OnInit {
     movData.type = 'IN';
     movData.hora = this.obtenerHoraActual();
     movData.comprobantes = this.comprobantes;
+    movData.total = this.calcularTotal(this.comprobantes);
     this.authService.getUserTk().subscribe(res => movData.user = res);
     if (movData.comprobantes.length > 0) {
       console.log(movData);
       this.productoService.actualizarStock(movData.comprobantes, "IN").subscribe();
       this.movService.create(movData).subscribe((res) => {
+        this.generatePDF(movData);
         alert('Guardado exitosamente.');
         this.limpiarLista();
+       
       });
     } else {
       alert('Debe agregar al menos un producto.');
@@ -115,6 +128,7 @@ export class IngresoComponent implements OnInit {
 
   limpiarLista(): void {
     this.comprobantes = [];
+    this.movFrom.reset();
   }
   obtenerHoraActual(): string {
     const ahora = new Date();
@@ -122,4 +136,83 @@ export class IngresoComponent implements OnInit {
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
     return `${horas}:${minutos}`;
   }
+
+  calcularTotal(comprobantes: Comprobante[]): number {
+    // Inicializamos el total en 0
+    let total = 0;
+
+    // Iteramos sobre cada comprobante
+    comprobantes.forEach(comprobante => {
+      // Multiplicamos la cantidad por el precio del producto y lo sumamos al total
+      total += comprobante.cantidad * comprobante.product.price;
+    });
+
+    return total;
+  }
+
+  generatePDF(movimiento:Movimiento) {
+    const documentDefinition = {
+      content: [
+        { text: 'Hospital Pablo Soria', style: 'header' },
+        { text: 'Dirección Administrativa', style: 'subheader' },
+        { text: movimiento.user.service.name, style: 'subheader' },
+        ...(this.isIngreso
+          ? [
+              { text: `Proveedor: ${movimiento.proveedor}` },
+              { text: `Usuario: ${movimiento.user.name}` },
+            ]
+          : []),
+        { text: `Fecha: ${movimiento.date}` },
+        { text: `Hora: ${movimiento.hora}` },
+        ...(this.isIngreso
+          ? [
+              { text: `Remito N°: ${movimiento.remito}` },
+              { text: `O. Compra N°: ${movimiento.compra}` },
+              { text: `Exp. N°: ${movimiento.expediente}` },
+            ]
+          : [{ text: `Usuario: ${movimiento.user.name}` }]),
+        { text: 'Detalle del Movimiento', style: 'sectionHeader' },
+        { text: `Numero: 2024-${movimiento.code}` },
+        { text: `Tipo: ${movimiento.type}` },
+        { text: `Observación: ${movimiento.observacion}` },
+        {
+          table: {
+            widths: ['auto', '*', 'auto', 'auto'],
+            body: [
+              ['Cod.', 'Articulo Descripcion', 'U.M', 'Cantidad'],
+              ...movimiento.comprobantes.map((comp: any) => [
+                comp.product?.code || '-',
+                comp.product.name,
+                comp.product.unidad.name,
+                comp.cantidad,
+              ]),
+            ],
+          },
+        },
+        ...(this.isIngreso
+          ? [
+              { text: `Total: $${movimiento.total}`, style: 'total' },
+              {
+                text: `En palabras: ${movimiento.total}`,
+              },
+            ]
+          : []),
+        {
+          columns: [
+            { text: this.isIngreso ? 'Firma Proveedor' : 'Firma Entrega', alignment: 'center' },
+            { text: 'Firma Recepción', alignment: 'center' },
+          ],
+        },
+      ],
+      styles: {
+        header: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
+        subheader: { fontSize: 14, bold: true, margin: [0, 5, 0, 5] },
+        sectionHeader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] },
+        total: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
+      },
+    };
+
+    pdfMake.createPdf(documentDefinition).open();
+  }
+  
 }

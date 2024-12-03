@@ -1,5 +1,4 @@
 import { Comprobante } from "./comprobante";
-import { Producto } from "./producto";
 import { Service } from "./service";
 import { User } from "./user";
 
@@ -13,4 +12,9 @@ export class Movimiento {
     code?: string;
     service: Service;
     observacion: string;
+    remito?: string;
+    proveedor?: string;
+    compra?: string;
+    expediente?: string;
+    total?: number;
 }

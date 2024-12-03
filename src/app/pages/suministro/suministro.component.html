@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <form [formGroup]="movFrom" (ngSubmit)="saveTipo()">
             <!-- Card para buscar productos -->
-            <div class="card">
+            <div class="card card-warning">
                 <div class="card-header">
                     <h3 class="card-title">Buscar Articulos</h3>
                 </div>
@@ -21,7 +21,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <select id="service" class="form-control" formControlName="service">
+                                <select class="custom-select rounded-0" id="service" class="form-control"
+                                    formControlName="service">
                                     <option [value]="null">Seleccione un Servicio</option>
                                     <option *ngFor="let servicio of servicios" [value]="servicio._id">
                                         {{ servicio.name }}
@@ -35,6 +36,7 @@
                         <table id="productTable" class="table table-bordered table-striped mt-3">
                             <thead>
                                 <tr>
+                                    <th>Acc.</th>
                                     <th>Cod</th>
                                     <th>Nombre</th>
                                     <th>Stock</th>
@@ -42,11 +44,14 @@
                                     <th>Unidad</th>
                                     <th>Marca</th>
                                     <th>Obs</th>
-                                    <th>Acción</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let item of products; index as i">
+                                    <td>
+                                        <button class="btn btn-success btn-sm " (click)="addPro(item)">+</button>
+                                    </td>
                                     <td>{{ item?.code ?? '-'}}</td>
                                     <td>{{ item.name }}</td>
                                     <td>{{ item.stock }}</td>
@@ -54,10 +59,7 @@
                                     <td>{{ item.unidad?.name ?? '-' }}</td>
                                     <td>{{ item.marca?.name ?? '-' }}</td>
                                     <td>{{ item.observation }}</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm select-btn"
-                                            (click)="addPro(item)">Seleccionar</button>
-                                    </td>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -66,7 +68,7 @@
             </div>
 
             <!-- Card para lista de productos seleccionados -->
-            <div class="card">
+            <div class="card card-warning">
                 <div class="card-header">
                     <h3 class="card-title">Lista de Productos Seleccionados</h3>
                 </div>
@@ -93,7 +95,7 @@
                                     </td>
                                     <td>
                                         <button class="btn btn-danger btn-sm"
-                                            (click)="eliminarProducto(comprobante._id)">Eliminar</button>
+                                            (click)="eliminarProducto(comprobante.product._id)">X</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -109,9 +111,11 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-success" id="btnAceptar">Aceptar</button>
+                    <button type="submit" class="btn btn-success" id="btnAceptar"
+                        [disabled]="movFrom.invalid">Aceptar</button>
                     <button type="button" class="btn btn-danger" id="btnLimpiar"
                         (click)="limpiarLista()">Limpiar</button>
+                 
                     <button type="button" class="btn btn-secondary" id="btnImprimir">Imprimir</button>
                 </div>
             </div>

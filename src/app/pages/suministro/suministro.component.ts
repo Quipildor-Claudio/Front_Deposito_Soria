@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ProductoService } from '../../services/producto.service';
 
 import { Producto } from '../../models/producto';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule,Validators} from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -12,11 +12,12 @@ import { Service } from '../../models/service';
 import { MovimentService } from '../../services/moviment.service';
 import { JwtService } from '../../services/jwt.service';
 import { Comprobante } from '../../models/comprobante';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-suministro',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule,RouterLink],
   templateUrl: './suministro.component.html',
   styleUrl: './suministro.component.css'
 })
@@ -43,7 +44,7 @@ export class SuministroComponent implements OnInit {
       this.userId = this.jwtService.getUserIdFromToken(token);
     }
     this.movFrom = this.fb.group({
-      service: [null],
+      service: [null, [Validators.required]],
       observacion: [null],
       user: this.userId,
     });
@@ -111,7 +112,7 @@ export class SuministroComponent implements OnInit {
   }
 
   eliminarProducto(id: string): void {
-    this.comprobantes = this.comprobantes.filter((comprobante) => comprobante._id !== id);
+    this.comprobantes = this.comprobantes.filter((comprobante) => comprobante.product._id !== id);
   }
 
   limpiarLista(): void {

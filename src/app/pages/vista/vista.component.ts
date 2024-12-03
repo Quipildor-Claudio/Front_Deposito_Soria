@@ -1,4 +1,4 @@
-import { Component, inject, OnInit ,ElementRef, ViewChild} from '@angular/core';
+import { Component, inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MovimentService } from '../../services/moviment.service';
 import { Movimiento } from '../../models/movimiento';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { ServicioService } from '../../services/servicio.service';
 import { Service } from '../../models/service';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { NumberToWordsService } from '../../services/number-to-words.service';
 
 @Component({
   selector: 'app-vista',
@@ -21,9 +22,11 @@ export class VistaComponent implements OnInit {
 
   movService = inject(MovimentService);
   serService = inject(ServicioService);
+  convertidor = inject(NumberToWordsService);
   movimiento: Movimiento;
   service: Service;
   movId: string;
+  isIngreso: boolean = false;
   constructor(private route: ActivatedRoute,
     private router: Router) {
     this.movimiento = new Movimiento();
@@ -33,19 +36,22 @@ export class VistaComponent implements OnInit {
     // Verificar si estamos editando
     this.route.params.subscribe((params) => {
       if (params['id']) {
-
         this.movId = params['id'];
         this.loadMovimiento(this.movId);
       }
     });
     this.serService.get(this.movimiento.user.service).subscribe(res => this.service = res);
+ 
   }
 
   // Cargar datos de la tipo para editar
   loadMovimiento(id: string): void {
     this.movService.get(id).subscribe((res: any) => {
       this.movimiento = res;
-      console.log(this.movimiento);
+      if (this.movimiento.type == "IN") {
+        this.isIngreso = true;
+      }
+      // console.log(this.movimiento);
     });
   }
 
@@ -67,9 +73,10 @@ export class VistaComponent implements OnInit {
       const pageHeight = pdf.internal.pageSize.getHeight();
 
       // Ajusta el tamaño de la imagen al PDF
-      pdf.addImage(imgData, 'PNG', 10, 10, pageWidth - 20, pageHeight - 20);
+      pdf.addImage(imgData, 'PNG', 5, 5, pageWidth - 20, pageHeight - 20);
 
       pdf.save('reporte-movimiento.pdf');
     });
   }
+
 }
