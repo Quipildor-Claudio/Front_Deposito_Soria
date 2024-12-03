@@ -22,10 +22,13 @@ export class UnidadMedidaComponent implements OnInit {
   getData(): void {
     this.unidadService.getAll().subscribe((res: any) => {
       this.unidades = res;
-      console.log(res);
+      //console.log(res);
     });
   }
   delete(item: any): void {
-
+    this.unidadService.delete(item._id).subscribe(()=>{
+      alert('Eliminado exitosamente!');
+      this.getData();
+    });
   }
 }

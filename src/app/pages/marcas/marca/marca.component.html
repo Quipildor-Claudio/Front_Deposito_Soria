@@ -40,29 +40,28 @@
               <table class="table table-hover text-nowrap">
                 <thead>
                   <tr>
+                    <th>Acc.</th>
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Observacion</th>
 
-                    <th>Accion</th>
                   </tr>
                 </thead>
                 <tbody>
                   @for (item of marcas; track $index) {
                   <tr>
-                    <td>{{ $index+1 }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.observacion }}</td>
-
                     <td>
                       <div class="btn-group">
                         <button type="button" class="btn btn-warning" [routerLink]="['/marca', item._id]">
-                          <i class="fa fa-pen"></i></button>&nbsp;
+                          <i class="fa fa-pen"></i></button>
                         <button type="button" class="btn btn-danger" (click)="delete(item)">
                           <i class="fa fa-times"></i>
                         </button>
                       </div>
                     </td>
+                    <td>{{ $index+1 }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.observacion }}</td>
                   </tr>
                   }
                 </tbody>

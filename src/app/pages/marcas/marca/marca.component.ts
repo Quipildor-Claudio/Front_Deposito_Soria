@@ -11,24 +11,28 @@ import { RouterLink } from '@angular/router';
   styleUrl: './marca.component.css'
 })
 
-export class MarcaComponent implements OnInit{
+export class MarcaComponent implements OnInit {
   title: string = "Administracion Marca";
   marcaService = inject(MarcaService);
-  marcas:Marca[]=[];
+  marcas: Marca[] = [];
 
   ngOnInit(): void {
-      this.getData();
+    this.getData();
   }
 
-  getData():void{
-    this.marcaService.getAll().subscribe((res:any)=>{
-      this.marcas=res;
-      console.log(res);
+  getData(): void {
+    this.marcaService.getAll().subscribe((res: any) => {
+      this.marcas = res;
+      //console.log(res);
     });
   }
-  delete(item:any):void{
+  delete(item: any): void {
+    this.marcaService.delete(item._id).subscribe(() => {
+      alert('Eliminado exitosamente!');
+      this.getData();
+    });
 
   }
 
-  
+
 }

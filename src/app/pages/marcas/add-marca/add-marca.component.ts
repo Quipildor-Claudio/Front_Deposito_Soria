@@ -67,6 +67,7 @@ export class AddMarcaComponent implements OnInit {
       this.marcaService.create(marcaData).subscribe((res) => {
         this.marcaForm.reset();
         alert('Marca creada exitosamente');
+        this.router.navigate(['/marcas']);
         
       });
     }

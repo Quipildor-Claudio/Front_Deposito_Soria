@@ -66,7 +66,7 @@ export class AddTipoComponent implements OnInit {
       this.tipoService.create(tipoData).subscribe((res) => {
         this.tipoForm.reset();
         alert('Familia creada exitosamente');
-        
+        this.router.navigate(['/tipos']);
       });
     }
   }

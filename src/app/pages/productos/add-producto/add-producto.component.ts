@@ -107,11 +107,14 @@ export class AddProductoComponent implements OnInit {
       this.productoService.create(proData).subscribe((res) => {
         this.productoForm.reset();
         alert('Articulo creada exitosamente');
-        this.router.navigate(['/productos']);
+        //this.router.navigate(['/productos']);
 
       });
     }
+
   }
 
-
+  cancelPro(): void {
+    this.productoForm.reset();
+  }
 }

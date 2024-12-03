@@ -21,10 +21,13 @@ export class TipoComponent implements OnInit {
   getData():void{
     this.tipoService.getAll().subscribe((res:any)=>{
       this.familias=res;
-      console.log(res);
+      //console.log(res);
     });
   }
   delete(item:any):void{
-
+    this.tipoService.delete(item._id).subscribe(()=>{
+      alert("Eliminado con exito!");
+      this.getData();
+    });
   }
 }

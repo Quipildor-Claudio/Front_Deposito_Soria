@@ -67,6 +67,7 @@ export class AddUnidadMedidaComponent implements OnInit {
       this.unidadService.create(unidadData).subscribe((res) => {
         this.unidadForm.reset();
         alert('Unidad de Medida creada exitosamente');
+        this.router.navigate(['/unidades']);
 
       });
     }

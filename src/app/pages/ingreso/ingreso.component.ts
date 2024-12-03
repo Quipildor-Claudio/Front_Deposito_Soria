@@ -110,7 +110,7 @@ export class IngresoComponent implements OnInit {
   }
 
   eliminarProducto(id: string): void {
-    this.comprobantes = this.comprobantes.filter((comprobante) => comprobante._id !== id);
+    this.comprobantes = this.comprobantes.filter((comprobante) => comprobante.product._id !== id);
   }
 
   limpiarLista(): void {

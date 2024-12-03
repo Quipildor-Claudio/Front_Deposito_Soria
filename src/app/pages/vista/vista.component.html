@@ -1,66 +1,145 @@
 <div class="container mt-4">
-    <div class="card">
-        <div class="card-body">
-            <!-- Información principal -->
-            <hr />
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Hospital Pablo Soria</strong> </p>
-                    <p><strong>Dirección Administrativa</strong> </p>
-                    <p><strong>{{service.name}}</strong></p>
+    <button class="btn btn-primary mb-4" (click)="generatePDF()">Generar PDF</button>
+    <!-- Contenedor del PDF -->
+    <div #pdfContent class="d-flex justify-content-between">
+        <!-- Original -->
+        <div class="card me-2 " style="width: 50%">
+
+            <div class="card-body">
+                <!-- Información principal -->
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Hospital Pablo Soria</strong> </p>
+                        <p><strong>Dirección Administrativa</strong> </p>
+                        <p><strong>{{service.name}}</strong></p>
+                        <span class="badge badge-primary">Original</span>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
+                        <p><strong>Hora:</strong> {{ movimiento.hora }}</p>
+                        <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
-                    <p><strong>Hora:</strong> {{ movimiento.hora }}</p>
-                    <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+                <hr />
+                <!-- Detalle de comprobantes -->
+                <h5>Detalle del Movimiento</h5>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Numero:</strong> 2024-{{ movimiento.code }}</p>
+                        <p><strong>Tipo:</strong> {{ getMovimientoTipo(movimiento.type) }}</p>
+                        <p><strong>Servicio:</strong> {{ movimiento.service.name }}</p>
+                        <p><strong>Observación:</strong> {{ movimiento.observacion }}</p>
+                    </div>
+                </div>
+                <hr />
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cod.</th>
+                            <th>Articulo Descripcion</th>
+                            <th>U.M</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let comprobante of movimiento.comprobantes">
+                            <td>{{ comprobante.product?.code ?? '-' }}</td>
+                            <td>{{ comprobante.product.name }}</td>
+                            <td>{{ comprobante.product.unidad.name }}</td>
+                            <td>{{ comprobante.cantidad }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <!-- Sección de firmas -->
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <div class="border-top mt-4"></div>
+                        <p>Firma Entrega</p>
+
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="border-top mt-4"></div>
+                        <p>Firma Recepción</p>
+
+                    </div>
                 </div>
             </div>
-            <hr />
-            <!-- Detalle de comprobantes -->
-            <h5>Detalle del Movimiento</h5>
-            <hr />
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Numero:</strong> 2024-{{ movimiento.code }}</p>
-                    <p><strong>Tipo:</strong> {{ getMovimientoTipo(movimiento.type) }}</p>
-                    <p><strong>Servicio:</strong> {{ movimiento.service.name }}</p>
-                    <p><strong>Observación:</strong> {{ movimiento.observacion }}</p>
+
+        </div>
+        <!-- Copiad -->
+        <div class="card me-2" style="width: 50%">
+
+            <div class="card-body">
+                <!-- Información principal -->
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Hospital Pablo Soria</strong> </p>
+                        <p><strong>Dirección Administrativa</strong> </p>
+                        <p><strong>{{service.name}}</strong></p>
+                        <span class="badge badge-primary">Copia</span>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
+                        <p><strong>Hora:</strong> {{ movimiento.hora }}</p>
+                        <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+                    </div>
                 </div>
-            </div>
-            <hr />
-
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Cod.</th>
-                        <th>Articulo Descripcion</th>
-                        <th>U.M</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let comprobante of movimiento.comprobantes">
-                        <td>{{ comprobante.product?.code ?? '-' }}</td>
-                        <td>{{ comprobante.product.name }}</td>
-                        <td>{{ comprobante.product.unidad.name }}</td>
-                        <td>{{ comprobante.cantidad }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <hr />
-            <!-- Sección de firmas -->
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    <div class="border-top mt-4"></div>
-                    <p>Firma Entrega</p>
-
+                <hr />
+                <!-- Detalle de comprobantes -->
+                <h5>Detalle del Movimiento</h5>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Numero:</strong> 2024-{{ movimiento.code }}</p>
+                        <p><strong>Tipo:</strong> {{ getMovimientoTipo(movimiento.type) }}</p>
+                        <p><strong>Servicio:</strong> {{ movimiento.service.name }}</p>
+                        <p><strong>Observación:</strong> {{ movimiento.observacion }}</p>
+                    </div>
                 </div>
-                <div class="col-md-6 text-center">
-                    <div class="border-top mt-4"></div>
-                    <p>Firma Recepción</p>
+                <hr />
 
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cod.</th>
+                            <th>Articulo Descripcion</th>
+                            <th>U.M</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let comprobante of movimiento.comprobantes">
+                            <td>{{ comprobante.product?.code ?? '-' }}</td>
+                            <td>{{ comprobante.product.name }}</td>
+                            <td>{{ comprobante.product.unidad.name }}</td>
+                            <td>{{ comprobante.cantidad }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <!-- Sección de firmas -->
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <div class="border-top mt-4"></div>
+                        <p>Firma Entrega</p>
+
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="border-top mt-4"></div>
+                        <p>Firma Recepción</p>
+
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
+
+
+
 </div>

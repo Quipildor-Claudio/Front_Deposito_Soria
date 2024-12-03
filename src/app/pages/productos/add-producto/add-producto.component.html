@@ -77,8 +77,10 @@
                             <button type="submit" class="btn btn-primary" [disabled]="productoForm.invalid">
                                 {{ isEdit ? 'Actualizar' : 'Guardar' }}
                             </button>
-                            <button type="button" class="btn btn-secondary"
-                                [routerLink]="['/productos']">Cancelar</button>
+                            <button type="button" class="btn btn-danger"
+                                (click)="cancelPro()">Cancelar</button>
+                                <button type="button" class="btn btn-secondary"
+                                [routerLink]="['/productos']">Ir a Listado</button>
                         </div>
                     </form>
                 </div>

@@ -1,11 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit ,ElementRef, ViewChild} from '@angular/core';
 import { MovimentService } from '../../services/moviment.service';
 import { Movimiento } from '../../models/movimiento';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ServicioService } from '../../services/servicio.service';
 import { Service } from '../../models/service';
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-vista',
@@ -16,6 +17,8 @@ import { Service } from '../../models/service';
 })
 
 export class VistaComponent implements OnInit {
+  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
+
   movService = inject(MovimentService);
   serService = inject(ServicioService);
   movimiento: Movimiento;
@@ -53,5 +56,20 @@ export class VistaComponent implements OnInit {
       return 'INGRESO';
     }
     return 'Desconocido';
+  }
+
+  generatePDF(): void {
+    const element = this.pdfContent.nativeElement;
+    html2canvas(element, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('landscape', 'mm', 'a4'); // Horizontal A4
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // Ajusta el tamaño de la imagen al PDF
+      pdf.addImage(imgData, 'PNG', 10, 10, pageWidth - 20, pageHeight - 20);
+
+      pdf.save('reporte-movimiento.pdf');
+    });
   }
 }
