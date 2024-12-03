@@ -14,6 +14,7 @@ import { Service } from '../../models/service';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Movimiento } from '../../models/movimiento';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class IngresoComponent implements OnInit {
   userId: string;
   isIngreso:boolean=true;
  
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,  private router: Router) {
 
   }
 
@@ -108,8 +109,8 @@ export class IngresoComponent implements OnInit {
       console.log(movData);
       this.productoService.actualizarStock(movData.comprobantes, "IN").subscribe();
       this.movService.create(movData).subscribe((res) => {
-        this.generatePDF(movData);
-        alert('Guardado exitosamente.');
+        console.log(res);
+        this.router.navigate(['/vista',res._id]);
         this.limpiarLista();
        
       });

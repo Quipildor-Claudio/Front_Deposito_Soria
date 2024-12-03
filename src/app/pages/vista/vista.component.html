@@ -1,104 +1,204 @@
 <div class="container mt-4">
-    <button class="btn btn-primary mb-4" (click)="generatePDF()">Generar PDF</button>
-    <!-- Contenedor del PDF -->
-    <div #pdfContent class="d-flex justify-content-between">
-        <!-- Original -->
-        <div class="card me-2 " style="width: 50%">
+  <button class="btn btn-primary mb-4" (click)="generatePDF()">
+    Generar PDF
+  </button>
+  <!-- Contenedor del PDF -->
+  <div #pdfContent class="d-flex justify-content-between">
+    <!-- Original -->
+    <div class="card me-2" style="width: 50%">
+      <div class="card-body">
+        <!-- Información principal -->
+        <hr />
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Hospital Pablo Soria</strong></p>
+            <p><strong>Dirección Administrativa</strong></p>
+            <p>
+              <strong>{{ service.name }}</strong>
+            </p>
+            @if(isIngreso) {
+            <p><strong>Proveedor :</strong>{{ movimiento.proveedor }}</p>
+            <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+            }
+            <span class="badge badge-primary">Original</span>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
+            <p><strong>Hora:</strong> {{ movimiento.hora }}</p>
+            @if(isIngreso) {
+            <p><strong>Remito N° :</strong> {{ movimiento.remito }}</p>
+            <p><strong>O. Compra N° :</strong> {{ movimiento.compra }}</p>
+            <p><strong>Exp. N° :</strong> {{ movimiento.expediente }}</p>
 
-            <div class="card-body">
-                <!-- Información principal -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Hospital Pablo Soria</strong> </p>
-                        <p><strong>Dirección Administrativa</strong> </p>
-                        <p><strong>{{service.name}}</strong></p>
-                        @if(isIngreso)
-                        {
-                        <p><strong>Proveedor :</strong>{{movimiento.proveedor}} </p>
-                        <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
-                        }
-                        <span class="badge badge-primary">Original</span>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
-                        <p><strong>Hora:</strong> {{ movimiento.hora }}</p>
-                        @if(isIngreso)
-                        {
-                        <p><strong>Remito N° :</strong> {{ movimiento.remito }}</p>
-                        <p><strong>O. Compra N° :</strong> {{ movimiento.compra }}</p>
-                        <p><strong>Exp. N° :</strong> {{ movimiento.expediente }}</p>
-
-                        }
-                        @if(!isIngreso)
-                        {
-                        <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
-                        }
-                    </div>
-                </div>
-                <hr />
-                <!-- Detalle de comprobantes -->
-                <h5>Detalle del Movimiento</h5>
-                <hr />
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Numero:</strong> 2024-{{ movimiento.code }}</p>
-                        <p><strong>Tipo:</strong> {{ getMovimientoTipo(movimiento.type) }}</p>
-                        @if(!isIngreso){
-                        <p><strong>Servicio:</strong> {{ movimiento.service.name }}</p>
-                        }
-
-                        <p><strong>Observación:</strong> {{ movimiento.observacion }}</p>
-                    </div>
-                </div>
-                <hr />
-                <div class="row">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Cod.</th>
-                                <th>Articulo Descripcion</th>
-                                <th>U.M</th>
-                                <th>Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let comprobante of movimiento.comprobantes">
-                                <td>{{ comprobante.product?.code ?? '-' }}</td>
-                                <td>{{ comprobante.product.name }}</td>
-                                <td>{{ comprobante.product.unidad.name }}</td>
-                                <td>{{ comprobante.cantidad }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <hr />
-                @if(isIngreso){
-                <div class="row">
-                    <p><strong>Total :</strong> {{ movimiento.total | currency}}</p>
-                    <p> <strong> {{convertidor.convertNumberToWords(movimiento.total)}} </strong></p>
-                </div>
-                <hr />
-                }
-                <!-- Sección de firmas -->
-                <div class="row">
-                    <div class="col-md-6 text-center">
-                        <div class="border-top mt-4"></div>
-                        @if(isIngreso){
-                        <p>Firma Proveedor</p>
-                        }@else{
-                        <p>Firma Entrega</p>
-                        }
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <div class="border-top mt-4"></div>
-                        <p>Firma Recepción</p>
-
-                    </div>
-                </div>
-            </div>
+            } @if(!isIngreso) {
+            <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+            }
+          </div>
         </div>
+        <hr />
+        <!-- Detalle de comprobantes -->
+        <h5>Detalle del Movimiento</h5>
+        <hr />
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Numero:</strong> 2024-{{ movimiento.code }}</p>
+            <p>
+              <strong>Tipo:</strong> {{ getMovimientoTipo(movimiento.type) }}
+            </p>
+            @if(!isIngreso){
+            <p><strong>Servicio:</strong> {{ movimiento.service.name }}</p>
+            }
 
+            <p><strong>Observación:</strong> {{ movimiento.observacion }}</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Cod.</th>
+                <th>Articulo Descripcion</th>
+                <th>U.M</th>
+                <th>Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let comprobante of movimiento.comprobantes">
+                <td>{{ comprobante.product?.code ?? "-" }}</td>
+                <td>{{ comprobante.product.name }}</td>
+                <td>{{ comprobante.product.unidad.name }}</td>
+                <td>{{ comprobante.cantidad }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        @if(isIngreso){
+        <div class="row">
+          <p><strong>Total :</strong> {{ movimiento.total | currency }}</p>
+          <p>
+            <strong>
+              {{ convertidor.convertNumberToWords(movimiento.total) }}
+            </strong>
+          </p>
+        </div>
+        <hr />
+        }
+        <!-- Sección de firmas -->
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <div class="border-top mt-4"></div>
+            @if(isIngreso){
+            <p>Firma Proveedor</p>
+            }@else{
+            <p>Firma Entrega</p>
+            }
+          </div>
+          <div class="col-md-6 text-center">
+            <div class="border-top mt-4"></div>
+            <p>Firma Recepción</p>
+          </div>
+        </div>
+      </div>
     </div>
+    <!-- Copia -->
+    <div class="card me-2" style="width: 50%">
+      <div class="card-body">
+        <!-- Información principal -->
+        <hr />
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Hospital Pablo Soria</strong></p>
+            <p><strong>Dirección Administrativa</strong></p>
+            <p>
+              <strong>{{ service.name }}</strong>
+            </p>
+            @if(isIngreso) {
+            <p><strong>Proveedor :</strong>{{ movimiento.proveedor }}</p>
+            <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+            }
+            <span class="badge badge-primary">Original</span>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
+            <p><strong>Hora:</strong> {{ movimiento.hora }}</p>
+            @if(isIngreso) {
+            <p><strong>Remito N° :</strong> {{ movimiento.remito }}</p>
+            <p><strong>O. Compra N° :</strong> {{ movimiento.compra }}</p>
+            <p><strong>Exp. N° :</strong> {{ movimiento.expediente }}</p>
 
+            } @if(!isIngreso) {
+            <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+            }
+          </div>
+        </div>
+        <hr />
+        <!-- Detalle de comprobantes -->
+        <h5>Detalle del Movimiento</h5>
+        <hr />
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Numero:</strong> 2024-{{ movimiento.code }}</p>
+            <p>
+              <strong>Tipo:</strong> {{ getMovimientoTipo(movimiento.type) }}
+            </p>
+            @if(!isIngreso){
+            <p><strong>Servicio:</strong> {{ movimiento.service.name }}</p>
+            }
+
+            <p><strong>Observación:</strong> {{ movimiento.observacion }}</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Cod.</th>
+                <th>Articulo Descripcion</th>
+                <th>U.M</th>
+                <th>Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let comprobante of movimiento.comprobantes">
+                <td>{{ comprobante.product?.code ?? "-" }}</td>
+                <td>{{ comprobante.product.name }}</td>
+                <td>{{ comprobante.product.unidad.name }}</td>
+                <td>{{ comprobante.cantidad }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        @if(isIngreso){
+        <div class="row">
+          <p><strong>Total :</strong> {{ movimiento.total | currency }}</p>
+          <p>
+            <strong>
+              {{ convertidor.convertNumberToWords(movimiento.total) }}
+            </strong>
+          </p>
+        </div>
+        <hr />
+        }
+        <!-- Sección de firmas -->
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <div class="border-top mt-4"></div>
+            @if(isIngreso){
+            <p>Firma Proveedor</p>
+            }@else{
+            <p>Firma Entrega</p>
+            }
+          </div>
+          <div class="col-md-6 text-center">
+            <div class="border-top mt-4"></div>
+            <p>Firma Recepción</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

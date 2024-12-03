@@ -12,7 +12,8 @@ import { Service } from '../../models/service';
 import { MovimentService } from '../../services/moviment.service';
 import { JwtService } from '../../services/jwt.service';
 import { Comprobante } from '../../models/comprobante';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-suministro',
@@ -34,7 +35,7 @@ export class SuministroComponent implements OnInit {
   servicios: Service[] = [];
   movFrom!: FormGroup;
   userId: string;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private router:Router) {
 
   }
 
@@ -99,7 +100,7 @@ export class SuministroComponent implements OnInit {
       console.log(movData);
       this.productoService.actualizarStock(movData.comprobantes, "OUT").subscribe();
       this.movService.create(movData).subscribe((res) => {
-        alert('Guardado exitosamente.');
+        this.router.navigate(['/vista',res._id]);
         this.limpiarLista();
       });
     } else {
