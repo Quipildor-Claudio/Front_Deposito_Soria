@@ -118,7 +118,7 @@
             <p><strong>Proveedor :</strong>{{ movimiento.proveedor }}</p>
             <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
             }
-            <span class="badge badge-primary">Original</span>
+            <span class="badge badge-primary">Copia</span>
           </div>
           <div class="col-md-6">
             <p><strong>Fecha:</strong> {{ movimiento.date }}</p>
@@ -129,7 +129,7 @@
             <p><strong>Exp. N° :</strong> {{ movimiento.expediente }}</p>
 
             } @if(!isIngreso) {
-            <p><strong>Usuario:</strong> {{ movimiento.user.name }}</p>
+            <p><strong>Usuario:</strong> {{ movimiento.user?.name?? "-"}}</p>
             }
           </div>
         </div>

@@ -18,6 +18,7 @@ import { NumberToWordsService } from '../../services/number-to-words.service';
 })
 
 export class VistaComponent implements OnInit {
+
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
 
   movService = inject(MovimentService);
@@ -40,8 +41,7 @@ export class VistaComponent implements OnInit {
         this.loadMovimiento(this.movId);
       }
     });
-    this.serService.get(this.movimiento.user.service).subscribe(res => this.service = res);
- 
+   
   }
 
   // Cargar datos de la tipo para editar
@@ -51,7 +51,9 @@ export class VistaComponent implements OnInit {
       if (this.movimiento.type == "IN") {
         this.isIngreso = true;
       }
-      // console.log(this.movimiento);
+       console.log(this.movimiento.user.service);
+       this.serService.get(this.movimiento.user.service).subscribe(res => this.service = res);
+
     });
   }
 
