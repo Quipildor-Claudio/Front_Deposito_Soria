@@ -15,6 +15,7 @@ import { SuministroComponent } from './pages/suministro/suministro.component';
 import { IngresoComponent } from './pages/ingreso/ingreso.component';
 import { MovimientoComponent } from './pages/movimiento/movimiento.component';
 import { VistaComponent } from './pages/vista/vista.component';
+import { ReporteComponent } from './pages/reporte/reporte.component';
 
 
 export const routes: Routes = [
@@ -52,6 +53,8 @@ export const routes: Routes = [
     { path: 'movimientos', component: MovimientoComponent },
 
     { path: 'vista/:id', component: VistaComponent },
+
+    { path: 'reportes', component: ReporteComponent },
 
     // { path: '**', redirectTo: 'login' },
 ];

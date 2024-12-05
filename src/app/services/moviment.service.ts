@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { API_URI } from '../../../config/config';
 import { map, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Movimiento } from '../models/movimiento';
 
 
@@ -32,4 +32,10 @@ export class MovimentService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${API_URI}/movimiento/${id}`);
   }
+  buscarPorRangoDeFecha(startDate: string, endDate: string): Observable<any> {
+    let params = new HttpParams().set('startDate', startDate).set('endDate', endDate);
+    return this.http.get<any>(`${API_URI}/bydate?${params}`);
+  }
+
+
 }
