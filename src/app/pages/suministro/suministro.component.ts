@@ -18,7 +18,7 @@ import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-suministro',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule,RouterLink],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './suministro.component.html',
   styleUrl: './suministro.component.css'
 })

@@ -6,10 +6,20 @@
       <h3 class="card-title">{{ title }}</h3>
 
       <div class="card-tools">
-        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+        <button
+          type="button"
+          class="btn btn-tool"
+          data-card-widget="collapse"
+          title="Collapse"
+        >
           <i class="fas fa-minus"></i>
         </button>
-        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+        <button
+          type="button"
+          class="btn btn-tool"
+          data-card-widget="remove"
+          title="Remove"
+        >
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -20,12 +30,24 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">
-                <button type="button" class="btn-sm btn-primary" [routerLink]="['/producto']">Agregar</button>
+                <button
+                  type="button"
+                  class="btn-sm btn-primary"
+                  [routerLink]="['/producto']"
+                >
+                  Agregar
+                </button>
               </h3>
 
               <div class="card-tools">
                 <div class="input-group input-group-sm" style="width: 200px">
-                  <input type="text" name="name" [formControl]="searchControl"  class="form-control float-right" placeholder="Buscar por nombre" />
+                  <input
+                    type="text"
+                    name="name"
+                    [formControl]="searchControl"
+                    class="form-control float-right"
+                    placeholder="Buscar por nombre"
+                  />
 
                   <div class="input-group-append">
                     <button type="submit" class="btn btn-default">
@@ -49,8 +71,8 @@
                     <th>Medida</th>
                     <th>Marca</th>
                     <th>Precio</th>
+                    <th>Vto.</th>
                     <th>Obs</th>
-
                   </tr>
                 </thead>
                 <tbody>
@@ -58,9 +80,18 @@
                   <tr>
                     <td>
                       <div class="btn-group">
-                        <button type="button" class="btn btn-warning" [routerLink]="['/producto', item._id]">
-                          <i class="fa fa-pen"></i></button>
-                        <button type="button" class="btn btn-danger" (click)="delete(item)">
+                        <button
+                          type="button"
+                          class="btn btn-warning"
+                          [routerLink]="['/producto', item._id]"
+                        >
+                          <i class="fa fa-pen"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-danger"
+                          (click)="delete(item)"
+                        >
                           <i class="fa fa-times"></i>
                         </button>
                       </div>
@@ -69,12 +100,12 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.stock }}</td>
                     <td>{{ item.min }}</td>
-                    <td>{{ item.tipo?.name ?? "-"}}</td>
-                    <td>{{ item.unidad?.name ?? "-"}}</td>
+                    <td>{{ item.tipo?.name ?? "-" }}</td>
+                    <td>{{ item.unidad?.name ?? "-" }}</td>
                     <td>{{ item.marca?.name ?? "-" }}</td>
                     <td>{{ item.price }}</td>
                     <td>{{ item.observation }}</td>
-
+                    <td>{{ item.vencimiento }}</td>
                   </tr>
                   }
                 </tbody>
@@ -89,20 +120,30 @@
     <!-- /.card-body -->
     <div class="card-footer">
       <ul class="pagination pagination-sm m-0 float-right">
-
         @if(totalPages>1){
         <li class="page-item" [class.disabled]="currentPage === 1">
-          <button class="page-link" (click)="changePage(currentPage - 1)"
-            [disabled]="currentPage === 1">Anterior</button>
+          <button
+            class="page-link"
+            (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+          >
+            Anterior
+          </button>
         </li>
         <li class="page-item">
-          <span> &nbsp; Página {{ currentPage }} de {{ totalPages }} &nbsp;</span>
+          <span>
+            &nbsp; Página {{ currentPage }} de {{ totalPages }} &nbsp;</span
+          >
         </li>
         <li class="page-item" [class.disabled]="currentPage === totalPages">
-          <button class="page-link" (click)="changePage(currentPage + 1)"
-            [disabled]="currentPage === totalPages">Siguiente</button>
+          <button
+            class="page-link"
+            (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+          >
+            Siguiente
+          </button>
         </li>
-
         }
       </ul>
     </div>

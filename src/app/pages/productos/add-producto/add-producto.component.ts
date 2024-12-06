@@ -44,6 +44,7 @@ export class AddProductoComponent implements OnInit {
       name: ['', [Validators.required]],
       price: [null, [Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
+      vencimiento: [''],
       observation: [''],
       marca: [null],
       tipo: [null],

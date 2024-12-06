@@ -16,5 +16,6 @@ export class Producto {
     createdAt?: string; // Fecha de creación, generada automáticamente
     updatedAt?: string; // Fecha de actualización, generada automáticamente
     code?:string;
+    vencimiento?:string;
 }
 
