@@ -16,6 +16,8 @@ import { IngresoComponent } from './pages/ingreso/ingreso.component';
 import { MovimientoComponent } from './pages/movimiento/movimiento.component';
 import { VistaComponent } from './pages/vista/vista.component';
 import { ReporteComponent } from './pages/reporte/reporte.component';
+import { ServicioComponent } from './pages/servicios/servicio/servicio.component';
+import { AddServicioComponent } from './pages/servicios/add-servicio/add-servicio.component';
 
 
 export const routes: Routes = [
@@ -55,6 +57,12 @@ export const routes: Routes = [
     { path: 'vista/:id', component: VistaComponent },
 
     { path: 'reportes', component: ReporteComponent },
+    
+    { path: 'servicios', component: ServicioComponent },
+    { path: 'servicio', component: AddServicioComponent },
+    { path: 'servicio/:id', component: AddServicioComponent },
 
-    // { path: '**', redirectTo: 'login' },
+    
+
+    { path: '**', redirectTo: 'login' },
 ];

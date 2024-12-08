@@ -57,6 +57,7 @@ export class AddMarcaComponent implements OnInit {
     const marcaData: Marca = this.marcaForm.value;
 
     if (this.isEdit && this.marcaId) {
+  
       // Actualizar marca
       this.marcaService.update(this.marcaId,marcaData).subscribe((res)=>{
         this.router.navigate(['/marcas']);

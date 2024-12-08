@@ -56,9 +56,17 @@
                                     @for (movimiento of movimientos; track $index) {
                                     <tr>
                                         <td>
-                                            <button type="button" class="btn btn-warning"
-                                                [routerLink]="['/vista', movimiento._id]">
-                                                <i class="fa fa-eye"></i></button>&nbsp;
+                                            <div class="btn-group">
+                                                @if(movimiento.type == "IN"){
+                                                    <button type="button" class="btn btn-success" [routerLink]="['/ingreso', movimiento._id]">
+                                                        <i class="fa fa-pen"></i></button>
+                                                }
+                                
+                                                <button type="button" class="btn btn-warning"
+                                                    [routerLink]="['/vista', movimiento._id]">
+                                                    <i class="fa fa-eye"></i></button>
+                                            </div>
+                              
                                         </td>
                                         <td>{{ movimiento.code }}</td>
                                         <td>{{ movimiento.date }}</td>

@@ -1,0 +1,50 @@
+<div class="content">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">{{ isEdit ? 'Editar Servicio' : 'Nueva Servicio' }}</h3>
+            </div>
+            <form [formGroup]="serviceForm" (ngSubmit)="saveService()">
+              <div class="card-body">
+                <!-- Nombre -->
+                <div class="form-group">
+                  <label for="name">Nombre</label>
+                  <input
+                    type="text"
+                    id="name"
+                    class="form-control"
+                    formControlName="name"
+                    [class.is-invalid]="serviceForm.get('name')?.invalid && serviceForm.get('name')?.touched"
+                    placeholder="Ingrese el nombre de la marca"
+                  />
+                  <div *ngIf="serviceForm.get('name')?.invalid && serviceForm.get('name')?.touched" class="invalid-feedback">
+                    El nombre es obligatorio y debe tener al menos 3 caracteres.
+                  </div>
+                </div>
+  
+                <!-- Observación -->
+                <div class="form-group">
+                  <label for="observacion">Observación</label>
+                  <textarea
+                    id="observacion"
+                    class="form-control"
+                    formControlName="observacion"
+                    placeholder="Ingrese una observación (opcional)"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary" [disabled]="serviceForm.invalid">
+                  {{ isEdit ? 'Actualizar' : 'Guardar' }}
+                </button>
+                <button type="button" class="btn btn-secondary" [routerLink]="['/servicios']">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

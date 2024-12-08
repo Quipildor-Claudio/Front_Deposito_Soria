@@ -16,8 +16,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group">
-                                <input type="text" name="name" [formControl]="searchControl"
-                                    class="form-control is-valid" placeholder="Buscar articulo por nombre">
+                            @if(!isEdit){
+                            <input type="text" name="name" [formControl]="searchControl" class="form-control is-valid"
+                                placeholder="Buscar articulo por nombre">
+                            }
+
                         </div>
                     </div>
                     <div class="row">
@@ -63,7 +66,7 @@
 
                         </div>
                     </div>
-                   
+
                     <div class="row">
                         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                             <table id="productTable" class="table table-bordered table-striped mt-3">
@@ -148,8 +151,10 @@
 
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-success" id="btnAceptar"
-                        [disabled]="movFrom.invalid">Aceptar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="movFrom.invalid">
+                        {{ isEdit ? 'Actualizar' : 'Guardar' }}
+                    </button>
+
                     <button type="button" class="btn btn-danger" id="btnLimpiar"
                         (click)="limpiarLista()">Limpiar</button>
                 </div>

@@ -11,10 +11,8 @@ import { JwtService } from '../../services/jwt.service';
 import { Producto } from '../../models/producto';
 import { Comprobante } from '../../models/comprobante';
 import { Service } from '../../models/service';
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Movimiento } from '../../models/movimiento';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -38,10 +36,14 @@ export class IngresoComponent implements OnInit {
   servicios: Service[] = [];
   movFrom!: FormGroup;
   userId: string;
-  isIngreso:boolean=true;
- 
-  constructor(private fb: FormBuilder,  private router: Router) {
+  isEdit: boolean = false;
+  movId?: string;
+  currentMoviment: Movimiento;
 
+
+  constructor(private fb: FormBuilder, private route: ActivatedRoute,
+    private router: Router) {
+    this.currentMoviment = new Movimiento();
   }
 
   ngOnInit(): void {
@@ -57,7 +59,7 @@ export class IngresoComponent implements OnInit {
       total: [0],
       observacion: [null],
       user: this.userId,
-      
+
     });
 
     this.searchControl.valueChanges
@@ -78,6 +80,14 @@ export class IngresoComponent implements OnInit {
         this.products = Array.isArray(result) ? result : [];
       });
 
+    // Verificar si estamos editando
+    this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.isEdit = true;
+        this.movId = params['id'];
+        this.loadMov(this.movId);
+      }
+    });
 
   }
 
@@ -97,26 +107,55 @@ export class IngresoComponent implements OnInit {
 
     }
   }
-  saveTipo(): void {
 
-    const movData = this.movFrom.value;
-    movData.type = 'IN';
-    movData.hora = this.obtenerHoraActual();
-    movData.comprobantes = this.comprobantes;
-    movData.total = this.calcularTotal(this.comprobantes);
-    this.authService.getUserTk().subscribe(res => movData.user = res);
-    if (movData.comprobantes.length > 0) {
-      console.log(movData);
-      this.productoService.actualizarStock(movData.comprobantes, "IN").subscribe();
-      this.movService.create(movData).subscribe((res) => {
-        console.log(res);
-        this.router.navigate(['/vista',res._id]);
+  loadMov(id: any): void {
+    this.movService.get(id).subscribe(res => {
+      this.currentMoviment = res;
+      this.movFrom.patchValue(res);
+      this.isEdit = true;
+    });
+  }
+
+  saveTipo(): void {
+    if (this.movFrom.invalid) return;
+
+
+    if (this.isEdit && this.movId) {
+      const { observacion, remito, proveedor, compra, expediente } = this.movFrom.value;
+      this.currentMoviment.observacion = observacion;
+      this.currentMoviment.remito = remito;
+      this.currentMoviment.proveedor = proveedor;
+      this.currentMoviment.compra = compra;
+      this.currentMoviment.expediente = expediente;
+
+      console.log(this.currentMoviment);
+      this.movService.update(this.currentMoviment._id, this.currentMoviment).subscribe((res) => {
+        this.router.navigate(['/vista', res._id]);
         this.limpiarLista();
-       
       });
+
     } else {
-      alert('Debe agregar al menos un producto.');
+      const movData = this.movFrom.value;
+      movData.type = 'IN';
+      movData.hora = this.obtenerHoraActual();
+      movData.comprobantes = this.comprobantes;
+      movData.total = this.calcularTotal(this.comprobantes);
+      this.authService.getUserTk().subscribe(res => movData.user = res);
+      if (movData.comprobantes.length > 0) {
+        console.log(movData);
+        this.productoService.actualizarStock(movData.comprobantes, "IN").subscribe();
+        this.movService.create(movData).subscribe((res) => {
+          // console.log(res);
+          this.router.navigate(['/vista', res._id]);
+          this.limpiarLista();
+
+        });
+      } else {
+        alert('Debe agregar al menos un producto.');
+      }
+
     }
+
   }
 
   actualizarCantidad(comprobante: Comprobante, $event): void {
@@ -151,69 +190,6 @@ export class IngresoComponent implements OnInit {
     return total;
   }
 
-  generatePDF(movimiento:Movimiento) {
-    const documentDefinition = {
-      content: [
-        { text: 'Hospital Pablo Soria', style: 'header' },
-        { text: 'Dirección Administrativa', style: 'subheader' },
-        { text: movimiento.user.service.name, style: 'subheader' },
-        ...(this.isIngreso
-          ? [
-              { text: `Proveedor: ${movimiento.proveedor}` },
-              { text: `Usuario: ${movimiento.user.name}` },
-            ]
-          : []),
-        { text: `Fecha: ${movimiento.date}` },
-        { text: `Hora: ${movimiento.hora}` },
-        ...(this.isIngreso
-          ? [
-              { text: `Remito N°: ${movimiento.remito}` },
-              { text: `O. Compra N°: ${movimiento.compra}` },
-              { text: `Exp. N°: ${movimiento.expediente}` },
-            ]
-          : [{ text: `Usuario: ${movimiento.user.name}` }]),
-        { text: 'Detalle del Movimiento', style: 'sectionHeader' },
-        { text: `Numero: 2024-${movimiento.code}` },
-        { text: `Tipo: ${movimiento.type}` },
-        { text: `Observación: ${movimiento.observacion}` },
-        {
-          table: {
-            widths: ['auto', '*', 'auto', 'auto'],
-            body: [
-              ['Cod.', 'Articulo Descripcion', 'U.M', 'Cantidad'],
-              ...movimiento.comprobantes.map((comp: any) => [
-                comp.product?.code || '-',
-                comp.product.name,
-                comp.product.unidad.name,
-                comp.cantidad,
-              ]),
-            ],
-          },
-        },
-        ...(this.isIngreso
-          ? [
-              { text: `Total: $${movimiento.total}`, style: 'total' },
-              {
-                text: `En palabras: ${movimiento.total}`,
-              },
-            ]
-          : []),
-        {
-          columns: [
-            { text: this.isIngreso ? 'Firma Proveedor' : 'Firma Entrega', alignment: 'center' },
-            { text: 'Firma Recepción', alignment: 'center' },
-          ],
-        },
-      ],
-      styles: {
-        header: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
-        subheader: { fontSize: 14, bold: true, margin: [0, 5, 0, 5] },
-        sectionHeader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] },
-        total: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
-      },
-    };
 
-    pdfMake.createPdf(documentDefinition).open();
-  }
-  
+
 }
