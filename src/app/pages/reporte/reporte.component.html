@@ -7,96 +7,105 @@
 <div class="content">
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-6">
-				<div class="card">
-					<div class="card-header">
-					  <h3 class="card-title">Buscar Movimientos por Rango de Fechas</h3>
-					</div>
-					<div class="card-body">
-					  <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Buscar Movimientos por Rango de Fechas</h3>
+				</div>
+				<div class="card-body">
+					<form [formGroup]="searchForm" (ngSubmit)="onSearch()">
 						<div class="row">
-						  <div class="col-md-6">
-							<div class="form-group">
-							  <label for="startDate">Fecha de Inicio</label>
-							  <input
-								type="date"
-								id="startDate"
-								class="form-control"
-								formControlName="startDate"
-							  />
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="startDate">Fecha de Inicio</label>
+									<input type="date" id="startDate" class="form-control"
+										formControlName="startDate" />
+								</div>
+
+								<div class="form-group">
+									<label for="endDate">Fecha de Fin</label>
+									<input type="date" id="endDate" class="form-control" formControlName="endDate" />
+								</div>
 							</div>
-						  </div>
-						  <div class="col-md-6">
-							<div class="form-group">
-							  <label for="endDate">Fecha de Fin</label>
-							  <input
-								type="date"
-								id="endDate"
-								class="form-control"
-								formControlName="endDate"
-							  />
-							</div>
-						  </div>
+							<!-- <div class="col-md-6">
+								<div class="form-group">
+									<label for="startDate">Articulo</label>
+									<input type="date" id="startDate" class="form-control"
+										formControlName="startDate" />
+								</div>
+						
+								<div class="form-group">
+									<label for="endDate">Servicio</label>
+									<input type="date" id="endDate" class="form-control" formControlName="endDate" />
+								</div>
+							</div> -->
 						</div>
 						<button type="submit" class="btn btn-primary">
-						  Buscar
+							Buscar
 						</button>
-					  </form>
-					</div>
-				  </div>
-			</div>
-			<div class="col-md-6">
-
+					</form>
+				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="card mt-3" *ngIf="productsWithType.length > 0">
 				<div class="card-header">
-				  <h3 class="card-title">Productos y Tipo de Movimiento</h3>
+					<h3 class="card-title">Productos y Tipo de Movimiento</h3>
+					<div class="card-tools">
+						<div class="input-group input-group-sm" style="width: 300px;">
+							<input type="text" id="searchText" [(ngModel)]="searchText" class="form-control"
+								placeholder="Buscar movimientos">
+
+							<div class="input-group-append">
+								<button type="submit" class="btn btn-default">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="card-body">
-				  <table class="table table-bordered table-hover">
-					<thead>
-					  <tr>
-						<th>#</th>
-						<th>Mov.</th>
-						<th>Cod.</th>
-						<th>Producto
-							<button class="btn btn-sm btn-link" (click)="sortBy('product.name')">
-								<i class="fas fa-sort"></i>
-							  </button>
-						</th>
-						<th>Tipo
-							<button class="btn btn-sm btn-link" (click)="sortBy('type')">
-								<i class="fas fa-sort"></i>
-							  </button>
-						</th>
-						<th>Cantidad</th>
-						<th>
-							Servicio
-							<button class="btn btn-sm btn-link" (click)="sortBy('service.name')">
-							  <i class="fas fa-sort"></i>
-							</button>
-						  </th>
-						<th>Obs.</th>
-					  </tr>
-					</thead>
-					<tbody>
-					  <tr *ngFor="let item of productsWithType; let i = index">
-						<td>{{ i + 1 }}</td>
-						<th>{{item.code}}</th>
-						<td>{{ item.product.code }}</td>
-						<td>{{ item.product.name }}</td>
-						<td>{{ item.type }}</td>
-						<td>{{ item.cantidad }}</td>
-						<td>{{ item.service?.name??'-' }}</td>
-						<td>{{ item.product.observation }}</td>
-					  </tr>
-					</tbody>
-				  </table>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Mov.</th>
+								<th>Cod.</th>
+								<th>Producto
+									<button class="btn btn-sm btn-link" (click)="sortBy('product.name')">
+										<i class="fas fa-sort"></i>
+									</button>
+								</th>
+								<th>Tipo
+									<button class="btn btn-sm btn-link" (click)="sortBy('type')">
+										<i class="fas fa-sort"></i>
+									</button>
+								</th>
+								<th>Cantidad</th>
+								<th>
+									Servicio
+									<button class="btn btn-sm btn-link" (click)="sortBy('service.name')">
+										<i class="fas fa-sort"></i>
+									</button>
+								</th>
+								<th>Obs.</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let item of productsWithType| filter:searchText; let i = index">
+								<td>{{ i + 1 }}</td>
+								<th>{{item.code}}</th>
+								<td>{{ item.product.code }}</td>
+								<td>{{ item.product.name }}</td>
+								<td>{{ item.type }}</td>
+								<td>{{ item.cantidad }}</td>
+								<td>{{ item.service?.name??'-' }}</td>
+								<td>{{ item.product.observation }}</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-			  </div>
-			  
+			</div>
+
 		</div>
 
 	</div>

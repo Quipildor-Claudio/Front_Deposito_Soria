@@ -1,12 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovimentService } from '../../services/moviment.service';
 import { Movimiento } from '../../models/movimiento';
 import { CommonModule } from '@angular/common';
+import { FilterPipe } from '../../pipes/filter.pipe';
+
 @Component({
   selector: 'app-reporte',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule,CommonModule,FilterPipe,FormsModule],
   templateUrl: './reporte.component.html',
   styleUrl: './reporte.component.css'
 })
@@ -19,9 +21,14 @@ export class ReporteComponent {
   sortedProducts: any[] = [];
   currentSortKey: string = '';
   currentSortDirection: 'asc' | 'desc' = 'asc';
-  
+  isLoading: boolean = false;
+  errorMessage: string | null = null;
+  searchText: string = ''; // Texto de búsqueda
+
   constructor(private fb: FormBuilder) {
     this.searchForm = this.fb.group({
+      productId: ['', ],
+      serviceId: ['', ],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
     });
