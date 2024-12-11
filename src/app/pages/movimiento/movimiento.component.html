@@ -96,7 +96,35 @@
             </div>
         </div>
         <!-- /.card-body -->
-        <div class="card-footer"></div>
+        <div class="card-footer">
+            <ul class="pagination pagination-sm m-0 float-right">
+                @if(totalPages>1){
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <button
+                    class="page-link"
+                    (click)="changePage(currentPage - 1)"
+                    [disabled]="currentPage === 1"
+                  >
+                    Anterior
+                  </button>
+                </li>
+                <li class="page-item">
+                  <span>
+                    &nbsp; Página {{ currentPage }} de {{ totalPages }} &nbsp;</span
+                  >
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                  <button
+                    class="page-link"
+                    (click)="changePage(currentPage + 1)"
+                    [disabled]="currentPage === totalPages"
+                  >
+                    Siguiente
+                  </button>
+                </li>
+                }
+              </ul>
+        </div>
         <!-- /.card-footer-->
     </div>
     <!-- /.card -->

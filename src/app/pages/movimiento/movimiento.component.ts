@@ -3,7 +3,7 @@ import { Movimiento } from '../../models/movimiento';
 import { RouterLink } from '@angular/router';
 import { MovimentService } from '../../services/moviment.service';
 import { CommonModule } from '@angular/common';
-import { Console } from 'console';
+import { PaginatedResponse } from '../../models/paginated-response';
 
 @Component({
   selector: 'app-movimiento',
@@ -17,11 +17,25 @@ export class MovimientoComponent implements OnInit {
   movimientos: Movimiento[] = [];
   movService = inject(MovimentService);
 
+  totalItems: number = 0;
+  totalPages: number = 0;
+  currentPage: number = 1;
+  limit: number = 10;
   ngOnInit(): void {
+    this.loadMovimientos();
+  }
 
-    this.movService.getAll().subscribe(res => {
-      this.movimientos = res
-     // console.log(res);
+  loadMovimientos(): void {
+    this.movService.getMovientos(this.currentPage, this.limit).subscribe((data: PaginatedResponse<Movimiento>) => {
+      this.movimientos = data.items;
+      this.totalItems = data.totalItems;
+      this.totalPages = data.totalPages;
+      this.currentPage = data.currentPage;
+      //console.log(this.articulos, this.totalPages)
     });
+  }
+  changePage(page: number): void {
+    this.currentPage = page;
+    this.loadMovimientos();
   }
 }

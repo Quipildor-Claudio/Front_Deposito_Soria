@@ -3,6 +3,7 @@ import { API_URI } from '../../../config/config';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Movimiento } from '../models/movimiento';
+import { PaginatedResponse } from '../models/paginated-response';
 
 
 @Injectable({
@@ -17,6 +18,10 @@ export class MovimentService {
       map(response => response as any[])
     );
   }
+  getMovientos(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Movimiento>> {
+    return this.http.get<PaginatedResponse<Movimiento>>(`${API_URI}/movimiento/?page=${page}&limit=${limit}`);
+  }
+
   get(id: any): Observable<Movimiento> {
     return this.http.get<Movimiento>(`${API_URI}/movimiento/${id}`);
   }
