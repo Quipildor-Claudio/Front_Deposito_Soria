@@ -21,13 +21,17 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <select class="custom-select rounded-0" id="service" class="form-control"
-                                    formControlName="service">
-                                    <option [value]="null">Seleccione un Servicio</option>
-                                    <option *ngFor="let servicio of servicios" [value]="servicio._id">
-                                        {{ servicio.name }}
-                                    </option>
-                                </select>
+                                <mat-form-field style="height: 60px; width: 400px;">
+                                    <input type="text" matInput [formControl]="textControl" [matAutocomplete]="auto" 
+
+                                       placeholder="Buscar servicio" />
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                        (optionSelected)="onOptionSelected($event.option.value)">
+                                        <mat-option *ngFor="let service of filteredServices | async" [value]="service">
+                                            {{ service.name }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
                             </div>
                         </div>
                     </div>
@@ -115,7 +119,7 @@
                         [disabled]="movFrom.invalid">Aceptar</button>
                     <button type="button" class="btn btn-danger" id="btnLimpiar"
                         (click)="limpiarLista()">Limpiar</button>
-                 
+
                 </div>
             </div>
         </form>

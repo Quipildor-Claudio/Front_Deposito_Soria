@@ -19,7 +19,7 @@ export class MovimentService {
     );
   }
   getMovientos(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Movimiento>> {
-    return this.http.get<PaginatedResponse<Movimiento>>(`${API_URI}/movimiento/?page=${page}&limit=${limit}`);
+    return this.http.get<PaginatedResponse<Movimiento>>(`${API_URI}/movimientos/?page=${page}&limit=${limit}`);
   }
 
   get(id: any): Observable<Movimiento> {

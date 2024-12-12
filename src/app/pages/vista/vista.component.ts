@@ -65,20 +65,30 @@ export class VistaComponent implements OnInit {
     }
     return 'Desconocido';
   }
-
   generatePDF(): void {
     const element = this.pdfContent.nativeElement;
     html2canvas(element, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('landscape', 'mm', 'a4'); // Horizontal A4
+      const pdf = new jsPDF('portrait', 'mm', 'a4'); // PDF en orientación vertical (portrait)
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-
-      // Ajusta el tamaño de la imagen al PDF
-      pdf.addImage(imgData, 'PNG', 5, 5, pageWidth - 20, pageHeight - 20);
-
+  
+      // Ajustar la imagen para que se divida entre la izquierda y la derecha
+      const leftMargin = 5;
+      const topMargin = 5;
+    //  const cardWidth = (pageWidth / 2) - 10; // 50% del ancho de la página menos márgenes
+        const cardWidth = (pageWidth ) - 10; // 50% del ancho de la página menos márgenes
+      const cardHeight = pageHeight - 10; // Usar toda la altura disponible menos los márgenes
+  
+      // Primero se agrega la mitad de la imagen en la parte izquierda
+      pdf.addImage(imgData, 'PNG', leftMargin, topMargin, cardWidth, cardHeight);
+  
+      // Luego se agrega la otra mitad de la imagen en la parte derecha
+     // pdf.addImage(imgData, 'PNG', pageWidth / 2, topMargin, cardWidth, cardHeight);
+  
+      // Guardar el PDF con las dos mitades de la imagen
       pdf.save('reporte-movimiento.pdf');
     });
   }
-
+  
 }

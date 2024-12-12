@@ -2,9 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ProductoService } from '../../services/producto.service';
 
 import { Producto } from '../../models/producto';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule,Validators} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ServicioService } from '../../services/servicio.service';
 import { AuthService } from '../../services/auth.service';
@@ -13,18 +13,22 @@ import { MovimentService } from '../../services/moviment.service';
 import { JwtService } from '../../services/jwt.service';
 import { Comprobante } from '../../models/comprobante';
 import { Router, RouterLink } from '@angular/router';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-suministro',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatAutocompleteModule, MatInputModule],
   templateUrl: './suministro.component.html',
   styleUrl: './suministro.component.css'
 })
 export class SuministroComponent implements OnInit {
   title: string = "Suministro";
-  searchControl = new FormControl('');
+  searchControl = new FormControl(''); // busqueda de producto
+  textControl = new FormControl(''); // busqueda de servicios
+
   authService = inject(AuthService);
   productoService = inject(ProductoService);
   serService = inject(ServicioService);
@@ -35,8 +39,16 @@ export class SuministroComponent implements OnInit {
   servicios: Service[] = [];
   movFrom!: FormGroup;
   userId: string;
-  constructor(private fb: FormBuilder,private router:Router) {
+  filteredServices: Observable<Service[]>;
+  selectedService: Service | null = null; // Objeto seleccionado
 
+  constructor(private fb: FormBuilder, private router: Router) {
+
+    this.filteredServices = this.textControl.valueChanges.pipe(
+      startWith(''),
+      map((value: string | Service) => (typeof value === 'string' ? value : value?.name || '')),
+      map((name) => this.filterServices(name))
+    );
   }
 
   ngOnInit(): void {
@@ -45,7 +57,7 @@ export class SuministroComponent implements OnInit {
       this.userId = this.jwtService.getUserIdFromToken(token);
     }
     this.movFrom = this.fb.group({
-      service: [null, [Validators.required]],
+      service: [null],
       observacion: [null],
       user: this.userId,
     });
@@ -69,6 +81,9 @@ export class SuministroComponent implements OnInit {
       });
 
     this.getServicios();
+
+
+
   }
   getServicios() {
     this.serService.getAll().subscribe(res => this.servicios = res);
@@ -96,11 +111,13 @@ export class SuministroComponent implements OnInit {
     movData.hora = this.obtenerHoraActual();
     movData.comprobantes = this.comprobantes;
     this.authService.getUserTk().subscribe(res => movData.user = res);
+    movData.service = this.selectedService;
+   // console.log(movData);
     if (movData.comprobantes.length > 0) {
-      console.log(movData);
+      //console.log(movData);
       this.productoService.actualizarStock(movData.comprobantes, "OUT").subscribe();
       this.movService.create(movData).subscribe((res) => {
-        this.router.navigate(['/vista',res._id]);
+        this.router.navigate(['/vista', res._id]);
         this.limpiarLista();
       });
     } else {
@@ -124,5 +141,21 @@ export class SuministroComponent implements OnInit {
     const horas = ahora.getHours().toString().padStart(2, '0');
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
     return `${horas}:${minutos}`;
+  }
+
+  private filterServices(name: string): Service[] {
+    const filterValue = name.toLowerCase();
+    return this.servicios.filter((service) =>
+      service.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  onOptionSelected(service: Service): void {
+    this.selectedService = service; // Guardar el servicio seleccionado
+
+  }
+
+  displayFn(service: Service): string {
+    return service ? service.name : '';
   }
 }
