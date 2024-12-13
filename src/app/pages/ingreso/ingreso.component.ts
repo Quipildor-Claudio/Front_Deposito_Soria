@@ -146,7 +146,8 @@ export class IngresoComponent implements OnInit {
         this.productoService.actualizarStock(movData.comprobantes, "IN").subscribe();
         this.movService.create(movData).subscribe((res) => {
           // console.log(res);
-          this.router.navigate(['/vista', res._id]);
+          //this.router.navigate(['/vista', res._id]);
+          this.downloadPdf(res._id);
           this.limpiarLista();
 
         });
@@ -190,6 +191,22 @@ export class IngresoComponent implements OnInit {
     return total;
   }
 
+  downloadPdf(movementId: string) {
+    this.movService.downloadPdf(movementId).subscribe({
+      next: (pdfBlob) => {
+        // Crear un objeto URL para el archivo PDF
+        const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
 
+        // Abrir el PDF en una nueva pestaña
+        window.open(url, '_blank');
+        // Liberar el objeto URL después de su uso
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error al descargar el PDF:', error);
+      },
+    });
+  }
 
 }

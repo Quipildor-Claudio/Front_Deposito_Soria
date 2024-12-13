@@ -20,20 +20,24 @@ hr {
 
 p {
     margin: 0;
-    /* Elimina los márgenes */
+
     padding: 0;
-    /* Elimina cualquier relleno adicional */
+
 }
 
 .custom-table {
-    font-size: 6; /* Cambia el tamaño de la fuente */
-    border-spacing: 0; /* Elimina espacios entre celdas */
-  }
-  
-  .custom-table th,
-  .custom-table td {
-    padding: 1; /* Elimina el relleno interno de las celdas */
-    margin: 1; /* Elimina los márgenes */
-    line-height: 1; /* Ajusta la altura de línea */
-  }
-  
+    font-size: 6;
+    /* Cambia el tamaño de la fuente */
+    border-spacing: 0;
+    /* Elimina espacios entre celdas */
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 1;
+    /* Elimina el relleno interno de las celdas */
+    margin: 1;
+    /* Elimina los márgenes */
+    line-height: 1;
+    /* Ajusta la altura de línea */
+}

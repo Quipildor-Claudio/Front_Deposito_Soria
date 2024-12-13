@@ -42,5 +42,11 @@ export class MovimentService {
     return this.http.get<any>(`${API_URI}/bydate?${params}`);
   }
 
+  downloadPdf(id:any) {
+    return this.http.get(`${API_URI}/generate-pdf/${id}`, {
+      responseType: 'blob', // Importante: recibimos el PDF como Blob
+    });
+  }
+
 
 }

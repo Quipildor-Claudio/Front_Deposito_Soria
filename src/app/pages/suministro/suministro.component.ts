@@ -112,12 +112,13 @@ export class SuministroComponent implements OnInit {
     movData.comprobantes = this.comprobantes;
     this.authService.getUserTk().subscribe(res => movData.user = res);
     movData.service = this.selectedService;
-   // console.log(movData);
+    // console.log(movData);
     if (movData.comprobantes.length > 0) {
       //console.log(movData);
       this.productoService.actualizarStock(movData.comprobantes, "OUT").subscribe();
       this.movService.create(movData).subscribe((res) => {
-        this.router.navigate(['/vista', res._id]);
+        // this.router.navigate(['/vista', res._id]);
+        this.downloadPdf(res._id);
         this.limpiarLista();
       });
     } else {
@@ -157,5 +158,23 @@ export class SuministroComponent implements OnInit {
 
   displayFn(service: Service): string {
     return service ? service.name : '';
+  }
+
+  downloadPdf(movementId: string) {
+    this.movService.downloadPdf(movementId).subscribe({
+      next: (pdfBlob) => {
+        // Crear un objeto URL para el archivo PDF
+        const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        // Abrir el PDF en una nueva pestaña
+        window.open(url, '_blank');
+        // Liberar el objeto URL después de su uso
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error al descargar el PDF:', error);
+      },
+    });
   }
 }
