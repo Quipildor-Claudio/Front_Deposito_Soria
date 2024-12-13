@@ -41,7 +41,7 @@ export class VistaComponent implements OnInit {
         this.loadMovimiento(this.movId);
       }
     });
-   
+
   }
 
   // Cargar datos de la tipo para editar
@@ -51,8 +51,8 @@ export class VistaComponent implements OnInit {
       if (this.movimiento.type == "IN") {
         this.isIngreso = true;
       }
-       console.log(this.movimiento.user.service);
-       this.serService.get(this.movimiento.user.service).subscribe(res => this.service = res);
+      console.log(this.movimiento.user.service);
+      this.serService.get(this.movimiento.user.service).subscribe(res => this.service = res);
 
     });
   }
@@ -72,23 +72,23 @@ export class VistaComponent implements OnInit {
       const pdf = new jsPDF('portrait', 'mm', 'a4'); // PDF en orientación vertical (portrait)
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-  
+
       // Ajustar la imagen para que se divida entre la izquierda y la derecha
       const leftMargin = 5;
       const topMargin = 5;
-    //  const cardWidth = (pageWidth / 2) - 10; // 50% del ancho de la página menos márgenes
-        const cardWidth = (pageWidth ) - 10; // 50% del ancho de la página menos márgenes
-      const cardHeight = pageHeight - 10; // Usar toda la altura disponible menos los márgenes
-  
+      // const cardWidth = (pageWidth / 2) - 10; // 50% del ancho de la página menos márgenes
+      const cardWidth = (pageWidth) - 10; // 50% del ancho de la página menos márgenes
+      const cardHeight = (pageHeight / 2) - 10; // Usar toda la altura disponible menos los márgenes
+
       // Primero se agrega la mitad de la imagen en la parte izquierda
       pdf.addImage(imgData, 'PNG', leftMargin, topMargin, cardWidth, cardHeight);
-  
+
       // Luego se agrega la otra mitad de la imagen en la parte derecha
-     // pdf.addImage(imgData, 'PNG', pageWidth / 2, topMargin, cardWidth, cardHeight);
-  
+      //pdf.addImage(imgData, 'PNG', pageWidth / 2, topMargin, cardWidth, cardHeight);
+
       // Guardar el PDF con las dos mitades de la imagen
       pdf.save('reporte-movimiento.pdf');
     });
   }
-  
+
 }
