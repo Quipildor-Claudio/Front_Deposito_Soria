@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
+                        <div class="card-body p-0">
                             <table class="table table-hover text-nowrap">
                                 <thead>
                                     <tr>
@@ -49,7 +49,6 @@
                                         <th>Servicio</th>
                                         <th>Productos</th>
                                         <th>Observación</th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,14 +65,13 @@
                                                     [routerLink]="['/vista', movimiento._id]">
                                                     <i class="fa fa-eye"></i></button>
                                             </div>
-                              
                                         </td>
                                         <td>{{ movimiento.code }}</td>
                                         <td>{{ movimiento.date }}</td>
                                         <td>{{ movimiento.hora }}</td>
                                         <td>{{ movimiento.type }}</td>
                                         <td>{{ movimiento.user?.name }}</td>
-                                        <td>{{ movimiento.service?.name }}</td>
+                                        <td >{{ movimiento.service?.name }}</td>
                                         <td>
                                             <ul>
                                                 <li *ngFor="let comprobante of movimiento.comprobantes">
@@ -83,7 +81,6 @@
                                             </ul>
                                         </td>
                                         <td>{{ movimiento.observacion }}</td>
-
                                     </tr>
                                     }
                                 </tbody>

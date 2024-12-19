@@ -117,7 +117,7 @@ export class SuministroComponent implements OnInit {
       //console.log(movData);
       this.productoService.actualizarStock(movData.comprobantes, "OUT").subscribe();
       this.movService.create(movData).subscribe((res) => {
-        // this.router.navigate(['/vista', res._id]);
+        //this.router.navigate(['/vista', res._id]);
         this.downloadPdf(res._id);
         this.limpiarLista();
       });
