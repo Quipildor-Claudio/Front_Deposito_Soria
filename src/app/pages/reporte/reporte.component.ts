@@ -8,7 +8,7 @@ import { FilterPipe } from '../../pipes/filter.pipe';
 @Component({
   selector: 'app-reporte',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule,FilterPipe,FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FilterPipe, FormsModule],
   templateUrl: './reporte.component.html',
   styleUrl: './reporte.component.css'
 })
@@ -17,18 +17,14 @@ export class ReporteComponent {
   searchForm: FormGroup;
   movements: Movimiento[] = [];
   movService = inject(MovimentService);
-  productsWithType: any[] = [];
-  sortedProducts: any[] = [];
-  currentSortKey: string = '';
-  currentSortDirection: 'asc' | 'desc' = 'asc';
   isLoading: boolean = false;
   errorMessage: string | null = null;
   searchText: string = ''; // Texto de búsqueda
-
+  codeprod: string = null;
   constructor(private fb: FormBuilder) {
     this.searchForm = this.fb.group({
-      productId: ['', ],
-      serviceId: ['', ],
+      productCode: ['',],
+      serviceId: ['',],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
     });
@@ -39,54 +35,26 @@ export class ReporteComponent {
       alert('Por favor complete ambos campos.');
       return;
     }
-
     const { startDate, endDate } = this.searchForm.value;
     this.movService.buscarPorRangoDeFecha(startDate, endDate).subscribe((res) => {
       this.movements = res as Movimiento[];
-      this.extractProductsWithType();
-      console.log(this.productsWithType);
-    });
-
-  }
-
-  extractProductsWithType(): void {
-    this.productsWithType = [];
-
-    this.movements.forEach((movement) => {
-      movement.comprobantes.forEach((comprobante: any) => {
-        this.productsWithType.push({
-          product: comprobante.product,
-          cantidad: comprobante.cantidad,
-          type: movement.type, // IN o OUT
-          code:movement.code,
-          service: movement.service || null, // Servicio asociado
-        });
-      });
     });
   }
-  sortBy(key: string): void {
-    if (this.currentSortKey === key) {
-      // Cambiar la dirección si el mismo key se selecciona
-      this.currentSortDirection = this.currentSortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      // Cambiar la clave de ordenación y establecer dirección ascendente
-      this.currentSortKey = key;
-      this.currentSortDirection = 'asc';
+
+  buscarProd(): void {
+    if (this.searchForm.invalid) {
+      alert('Por favor complete ambos campos de fecha.');
+      return;
     }
-
-    this.sortedProducts.sort((a, b) => {
-      const aValue = this.resolveKey(a, key);
-      const bValue = this.resolveKey(b, key);
-
-      if (aValue < bValue) return this.currentSortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return this.currentSortDirection === 'asc' ? 1 : -1;
-      return 0;
+    const { startDate, endDate, productCode } = this.searchForm.value;
+    this.codeprod = productCode;
+    console.log(startDate, endDate, productCode);
+    this.movService.buscarPorRangoDeFechaByProduct(startDate, endDate, productCode).subscribe((res) => {
+      this.movements = res as Movimiento[];
+      console.log(this.movements);
     });
   }
 
-  resolveKey(obj: any, key: string): any {
-    return key.split('.').reduce((o, k) => (o ? o[k] : null), obj);
-  }
 
 
 }

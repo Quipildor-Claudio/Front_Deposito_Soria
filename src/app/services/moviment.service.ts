@@ -42,6 +42,11 @@ export class MovimentService {
     return this.http.get<any>(`${API_URI}/bydate?${params}`);
   }
 
+  buscarPorRangoDeFechaByProduct(startDate: string, endDate: string,productCode:string): Observable<any> {
+    let params = new HttpParams().set('startDate', startDate).set('endDate', endDate).set('productCode', productCode);
+    return this.http.get<any>(`${API_URI}/bydateproduct?${params}`);
+  }
+
   downloadPdf(id:any) {
     return this.http.get(`${API_URI}/generate-pdf/${id}`, {
       responseType: 'blob', // Importante: recibimos el PDF como Blob

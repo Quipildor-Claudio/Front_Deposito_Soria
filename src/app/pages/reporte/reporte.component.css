@@ -1,3 +1,7 @@
 @page { size: 21cm 29.7cm; margin: 0.5cm }
 p { line-height: 90%; margin-bottom: 0.25cm; background: transparent }
 td p { orphans: 0; widows: 0; background: transparent }
+
+.custom{
+    width:200px;
+}
