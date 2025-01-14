@@ -18,6 +18,7 @@ import { VistaComponent } from './pages/vista/vista.component';
 import { ReporteComponent } from './pages/reporte/reporte.component';
 import { ServicioComponent } from './pages/servicios/servicio/servicio.component';
 import { AddServicioComponent } from './pages/servicios/add-servicio/add-servicio.component';
+import { ReportServiceComponent } from './report-service/report-service.component';
 
 
 export const routes: Routes = [
@@ -57,6 +58,8 @@ export const routes: Routes = [
     { path: 'vista/:id', component: VistaComponent },
 
     { path: 'reportes', component: ReporteComponent },
+    { path: 'reportes_servicio', component: ReportServiceComponent },
+
     
     { path: 'servicios', component: ServicioComponent },
     { path: 'servicio', component: AddServicioComponent },

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovimentService } from '../../services/moviment.service';
 import { Movimiento } from '../../models/movimiento';
@@ -8,7 +8,8 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user';
 import { Producto } from '../../models/producto';
 import { ProductoService } from '../../services/producto.service';
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-reporte',
   standalone: true,
@@ -30,13 +31,16 @@ export class ReporteComponent implements OnInit {
   totals: any;
   currentUser: any;
   currentProduct: any;
-
-
+  inicio: string;
+  final: string;
+  myDate = new Date();
+  currentTime: string;
+  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
 
   constructor(private fb: FormBuilder) {
     this.currentUser = new User();
     this.currentProduct = new Producto();
-
+    this.getCurrentTime();
     this.searchForm = this.fb.group({
       productCode: ['',],
       serviceId: ['',],
@@ -46,7 +50,7 @@ export class ReporteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.getUserTk().subscribe(res=>this.currentUser=res);
+    this.authService.getUserTk().subscribe(res => this.currentUser = res);
 
   }
 
@@ -68,15 +72,16 @@ export class ReporteComponent implements OnInit {
     }
     const { startDate, endDate, productCode } = this.searchForm.value;
     this.codeprod = productCode;
-
-    this.productService.getbyCode(productCode).subscribe(res=>{
-      this.currentProduct=res
+    this.inicio = startDate;
+    this.final = endDate;
+    this.productService.getbyCode(productCode).subscribe(res => {
+      this.currentProduct = res
       console.log(this.currentProduct);
     }
     );
 
     this.movService.buscarPorRangoDeFechaByProduct(startDate, endDate, productCode).subscribe((res) => {
-      
+
       // Filtrar los comprobantes en cada registro
       this.movements = res.map(record => {
         const filteredComprobantes = record.comprobantes.filter(comp => comp.product.code === this.codeprod);
@@ -109,6 +114,42 @@ export class ReporteComponent implements OnInit {
   }
 
 
+  getCurrentTime(): void {
+    const currentDate = new Date();
+    const hours = currentDate.getHours(); // Obtiene la hora
+    const minutes = currentDate.getMinutes(); // Obtiene los minutos
+    const seconds = currentDate.getSeconds(); // Obtiene los segundos
 
+    // Formatea la hora en un string
+    this.currentTime = `${this.formatNumber(hours)}:${this.formatNumber(minutes)}:${this.formatNumber(seconds)}`;
+  }
+
+  formatNumber(value: number): string {
+    return value < 10 ? `0${value}` : `${value}`;
+  }
+
+  generatePDF(): void {
+    const data = this.pdfContent.nativeElement;
+  // Mejorar la calidad usando html2canvas con un valor de escala mayor
+  html2canvas(data, { scale: 3 }).then(canvas => {  // 'scale: 3' aumenta la resolución
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+
+    const imgWidth = 210; // A4 width in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Mantener la relación de aspecto
+
+    // Calcular la posición horizontal para centrar la tabla
+    const xOffset = (pdf.internal.pageSize.width - imgWidth) / 2;
+
+    // Calcular la posición vertical para centrar la tabla (opcional)
+    const yOffset = 0;
+
+    // Agregar la imagen centrada en el PDF
+    pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
+
+    // Guardar el archivo PDF
+    pdf.save('movimientos-producto.pdf');
+  });
+  }
 
 }

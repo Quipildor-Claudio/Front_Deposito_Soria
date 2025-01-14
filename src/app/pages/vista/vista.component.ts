@@ -90,6 +90,7 @@ export class VistaComponent implements OnInit {
       pdf.save('reporte-movimiento.pdf');
     });
   }
+  
   generatePDFs(): void {
     this.downloadPdf(this.movId);
   }
