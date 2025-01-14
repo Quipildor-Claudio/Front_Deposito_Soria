@@ -23,6 +23,10 @@ export class ProductoService {
     return this.http.get<Producto>(`${API_URI}/producto/${id}`);
   }
 
+  getbyCode(code: any): Observable<Producto> {
+    return this.http.get<Producto>(`${API_URI}/searchpcode/${code}`);
+  }
+
   create(data: any): Observable<any> {
     return this.http.post(`${API_URI}/producto`, data);
   }
@@ -37,7 +41,7 @@ export class ProductoService {
   searchProductsNom(nom: string): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${API_URI}/searchnom?name=${nom}`);
   }
-  actualizarStock(comprobantes: any[],type:string): Observable<any> {
+  actualizarStock(comprobantes: any[], type: string): Observable<any> {
     const payload = { comprobantes, type };
     return this.http.post(`${API_URI}/actualizar-stock`, payload);
   }
