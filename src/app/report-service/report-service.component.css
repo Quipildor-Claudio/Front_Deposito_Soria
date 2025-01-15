@@ -1,0 +1,21 @@
+@page { size: 21cm 29.7cm; margin: 0.5cm }
+p { line-height: 90%; margin-bottom: 0.25cm; background: transparent }
+td p { orphans: 0; widows: 0; background: transparent }
+
+.custom{
+    width:200px;
+}
+
+
+  table {
+    border-collapse: collapse; /* Asegura que los bordes se combinen */
+    width: 100%; /* Opcional: hacer que la tabla ocupe todo el ancho disponible */
+  }
+  
+  table th, table td {
+    border: 1px solid black; /* Bordes de color negro */
+    padding: 8px; /* Espaciado interno */
+    text-align: center; /* Centra el texto */
+    vertical-align: middle;
+  }
+  

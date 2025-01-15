@@ -76,7 +76,6 @@ export class ReporteComponent implements OnInit {
     this.final = endDate;
     this.productService.getbyCode(productCode).subscribe(res => {
       this.currentProduct = res
-      console.log(this.currentProduct);
     }
     );
 
@@ -130,26 +129,26 @@ export class ReporteComponent implements OnInit {
 
   generatePDF(): void {
     const data = this.pdfContent.nativeElement;
-  // Mejorar la calidad usando html2canvas con un valor de escala mayor
-  html2canvas(data, { scale: 3 }).then(canvas => {  // 'scale: 3' aumenta la resolución
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF();
+    // Mejorar la calidad usando html2canvas con un valor de escala mayor
+    html2canvas(data, { scale: 3 }).then(canvas => {  // 'scale: 3' aumenta la resolución
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
 
-    const imgWidth = 210; // A4 width in mm
-    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Mantener la relación de aspecto
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Mantener la relación de aspecto
 
-    // Calcular la posición horizontal para centrar la tabla
-    const xOffset = (pdf.internal.pageSize.width - imgWidth) / 2;
+      // Calcular la posición horizontal para centrar la tabla
+      const xOffset = (pdf.internal.pageSize.width - imgWidth) / 2;
 
-    // Calcular la posición vertical para centrar la tabla (opcional)
-    const yOffset = 0;
+      // Calcular la posición vertical para centrar la tabla (opcional)
+      const yOffset = 0;
 
-    // Agregar la imagen centrada en el PDF
-    pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
+      // Agregar la imagen centrada en el PDF
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
 
-    // Guardar el archivo PDF
-    pdf.save('movimientos-producto.pdf');
-  });
+      // Guardar el archivo PDF
+      pdf.save('movimientos-producto.pdf');
+    });
   }
 
 }
