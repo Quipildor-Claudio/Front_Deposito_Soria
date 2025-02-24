@@ -12,20 +12,12 @@
             <div class="card-body">
               <div class="form-group">
                 <label for="name">Nombre del Producto</label>
-                <input
-                  type="text"
-                  id="name"
-                  class="form-control"
-                  formControlName="name"
-                  placeholder="Ingrese el nombre del producto"
-                />
-                <div
-                  *ngIf="
+                <input type="text" id="name" class="form-control" formControlName="name"
+                  placeholder="Ingrese el nombre del producto" />
+                <div *ngIf="
                     productoForm.get('name')?.invalid &&
                     productoForm.get('name')?.touched
-                  "
-                  class="text-danger"
-                >
+                  " class="text-danger">
                   El nombre es obligatorio.
                 </div>
               </div>
@@ -33,32 +25,19 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="price">Precio</label>
-                    <input
-                      type="number"
-                      id="price"
-                      class="form-control"
-                      formControlName="price"
-                      placeholder="Ingrese el precio del producto"
-                    />
+                    <input type="number" id="price" class="form-control" formControlName="price"
+                      placeholder="Ingrese el precio del producto" />
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="stock">Stock</label>
-                    <input
-                      type="number"
-                      id="stock"
-                      class="form-control"
-                      formControlName="stock"
-                      placeholder="Ingrese el stock"
-                    />
-                    <div
-                      *ngIf="
+                    <input type="number" id="stock" class="form-control" formControlName="stock"
+                      placeholder="Ingrese el stock" />
+                    <div *ngIf="
                         productoForm.get('stock')?.invalid &&
                         productoForm.get('stock')?.touched
-                      "
-                      class="text-danger"
-                    >
+                      " class="text-danger">
                       El stock es obligatorio y debe ser mayor o igual a 0.
                     </div>
                   </div>
@@ -67,22 +46,13 @@
 
               <div class="form-group">
                 <label for="price">Fecha Vto.</label>
-                <input
-                  type="date"
-                  id="vencimiento"
-                  class="form-control"
-                  formControlName="vencimiento"
-                />
+                <input type="date" id="vencimiento" class="form-control" formControlName="vencimiento" />
               </div>
 
               <div class="form-group">
                 <label for="observation">Observación</label>
-                <textarea
-                  id="observation"
-                  class="form-control"
-                  formControlName="observation"
-                  placeholder="Ingrese alguna observación"
-                ></textarea>
+                <textarea id="observation" class="form-control" formControlName="observation"
+                  placeholder="Ingrese alguna observación"></textarea>
               </div>
 
               <div class="form-group">
@@ -97,11 +67,7 @@
 
               <div class="form-group">
                 <label for="unidad">Unidad de Medida</label>
-                <select
-                  id="unidad"
-                  class="form-control"
-                  formControlName="unidad"
-                >
+                <select id="unidad" class="form-control" formControlName="unidad">
                   <option [value]="null">Seleccione una unidad</option>
                   <option *ngFor="let unidad of unidades" [value]="unidad._id">
                     {{ unidad.name }}
@@ -120,25 +86,13 @@
               </div>
             </div>
             <div class="card-footer">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                [disabled]="productoForm.invalid"
-              >
+              <button type="submit" class="btn btn-primary" [disabled]="productoForm.invalid">
                 {{ isEdit ? "Actualizar" : "Guardar" }}
               </button>
-              <button
-                type="button"
-                class="btn btn-danger"
-                (click)="cancelPro()"
-              >
+              <button type="button" class="btn btn-danger" (click)="cancelPro()">
                 Cancelar
               </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                [routerLink]="['/productos']"
-              >
+              <button type="button" class="btn btn-secondary" [routerLink]="['/productos']">
                 Ir a Listado
               </button>
             </div>

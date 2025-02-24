@@ -1,0 +1,71 @@
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    
+                    <div class="card-header">
+                        <h2>Articulos con Stock Bajo o Sin Stock</h2>
+
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 200px">
+                                <input type="text" name="name" class="form-control float-right"
+                                    placeholder="Buscar por nombre" />
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+
+                                    <th>Cod.</th>
+                                    <th>Nombre</th>
+                                    <th>Stock</th>
+                                    <th>S Min</th>
+                                    <th>Familia</th>
+                                    <th>Medida</th>
+                                    <th>Marca</th>
+                                    <th>Precio</th>
+                                    <th>Vto.</th>
+                                    <th>Obs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (item of productosModificados; track $index) {
+                                <tr>
+                                    <td>{{ item?.code ?? "-" }}</td>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.stock }}</td>
+                                    <td>{{ item.min }}</td>
+                                    <td>{{ item.tipo?.name ?? "-" }}</td>
+                                    <td>{{ item.unidad?.name ?? "-" }}</td>
+                                    <td>{{ item.marca?.name ?? "-" }}</td>
+                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.observation }}</td>
+                                    <td>{{ item.vencimiento }}</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- /.card -->
+</section>
+<!-- /.content -->

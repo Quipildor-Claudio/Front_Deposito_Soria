@@ -45,4 +45,9 @@ export class ProductoService {
     const payload = { comprobantes, type };
     return this.http.post(`${API_URI}/actualizar-stock`, payload);
   }
+  modificadoSinStock():Observable<any[]> {
+    return this.http.get(`${API_URI}/modificados-sin-stock`).pipe(
+      map(response => response as any[])
+    );
+  }
 }

@@ -80,7 +80,7 @@ export class ReportServiceComponent {
     this.inicio = startDate;
     this.final = endDate;
 
-    console.log(startDate, endDate , this.selectedService._id);
+    console.log(startDate, endDate, this.selectedService._id);
     this.movService.buscarPorRangoDeFechaByService(startDate, endDate, this.selectedService._id).subscribe((res) => {
       this.movements = res as Movimiento[];
       console.log(this.movements);
@@ -123,25 +123,38 @@ export class ReportServiceComponent {
 
   generatePDF(): void {
     const data = this.pdfContent.nativeElement;
-    // Mejorar la calidad usando html2canvas con un valor de escala mayor
-    html2canvas(data, { scale: 3 }).then(canvas => {  // 'scale: 3' aumenta la resolución
+    
+    html2canvas(data, { scale: 3 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-
-      const imgWidth = 210; // A4 width in mm
+      const pdf = new jsPDF('p', 'mm', 'a4');
+  
+      const imgWidth = 210; // Ancho en mm (A4)
+      const pageHeight = 297; // Alto en mm (A4)
+      const marginTop = 5; // Margen superior de 0.5 cm
+      const marginBottom = 10; // Margen inferior de 1 cm
+      const availableHeight = pageHeight - marginTop - marginBottom; // Altura disponible en cada página
       const imgHeight = (canvas.height * imgWidth) / canvas.width; // Mantener la relación de aspecto
-
-      // Calcular la posición horizontal para centrar la tabla
-      const xOffset = (pdf.internal.pageSize.width - imgWidth) / 2;
-
-      // Calcular la posición vertical para centrar la tabla (opcional)
-      const yOffset = 0;
-
-      // Agregar la imagen centrada en el PDF
-      pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
-
-      // Guardar el archivo PDF
-      pdf.save('movimientos-servicio.pdf');
+  
+      let yPosition = 0; // Posición inicial para la imagen
+      let currentPage = 1;
+      const totalPages = Math.ceil(imgHeight / availableHeight); // Calcular total de páginas
+  
+      while (yPosition < imgHeight) {
+        if (yPosition > 0) {
+          pdf.addPage(); // Agregar nueva página si hay más contenido
+          currentPage++;
+        }
+  
+        pdf.addImage(imgData, 'PNG', 0, marginTop - yPosition, imgWidth, imgHeight);
+  
+        // Agregar número de página en el pie de página con margen de 1 cm
+        pdf.setFontSize(10);
+        pdf.text(`Página ${currentPage} de ${totalPages}`, 105, pageHeight - marginBottom / 2, { align: "center" });
+  
+        yPosition += availableHeight; // Avanzar para la siguiente página
+      }
+  
+      pdf.save('movimientos-servicio.pdf'); // Guardar el archivo PDF
     });
   }
 }

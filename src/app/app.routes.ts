@@ -23,49 +23,50 @@ import { ReportServiceComponent } from './report-service/report-service.componen
 
 export const routes: Routes = [
     { path: 'login', component: LoguinComponent },
-    { path: 'register', component: RegisterComponent },
+    { path: 'register', component: RegisterComponent ,canActivate: [authGuard] },
     { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
 
-    { path: 'marcas', component: MarcaComponent },
-    { path: 'marca', component: AddMarcaComponent },
-    { path: 'marca/:id', component: AddMarcaComponent },
+    { path: 'marcas', component: MarcaComponent ,canActivate: [authGuard] },
+    { path: 'marca', component: AddMarcaComponent ,canActivate: [authGuard] },
+    { path: 'marca/:id', component: AddMarcaComponent ,canActivate: [authGuard] },
 
-    { path: 'tipos', component: TipoComponent },
-    { path: 'tipo', component: AddTipoComponent },
-    { path: 'tipo/:id', component: AddTipoComponent },
-
-
-
-    { path: 'unidades', component: UnidadMedidaComponent },
-    { path: 'unidad', component: AddUnidadMedidaComponent },
-    { path: 'unidad/:id', component: AddUnidadMedidaComponent },
+    { path: 'tipos', component: TipoComponent ,canActivate: [authGuard] },
+    { path: 'tipo', component: AddTipoComponent,canActivate: [authGuard]  },
+    { path: 'tipo/:id', component: AddTipoComponent,canActivate: [authGuard]  },
 
 
 
-    { path: 'productos', component: ProductoComponent },
-    { path: 'producto', component: AddProductoComponent },
-    { path: 'producto/:id', component: AddProductoComponent },
-
-    { path: 'suministro', component: SuministroComponent },
-    { path: 'suministro/:id', component: SuministroComponent },
+    { path: 'unidades', component: UnidadMedidaComponent,canActivate: [authGuard] },
+    { path: 'unidad', component: AddUnidadMedidaComponent,canActivate: [authGuard] },
+    { path: 'unidad/:id', component: AddUnidadMedidaComponent,canActivate: [authGuard]  },
 
 
-    { path: 'ingreso', component: IngresoComponent },
-    { path: 'ingreso/:id', component: IngresoComponent },
 
-    { path: 'movimientos', component: MovimientoComponent },
+    { path: 'productos', component: ProductoComponent,canActivate: [authGuard]  },
+    { path: 'producto', component: AddProductoComponent,canActivate: [authGuard]  },
+    { path: 'producto/:id', component: AddProductoComponent,canActivate: [authGuard]  },
 
-    { path: 'vista/:id', component: VistaComponent },
+    { path: 'suministro', component: SuministroComponent,canActivate: [authGuard]  },
+    { path: 'suministro/:id', component: SuministroComponent,canActivate: [authGuard]  },
 
-    { path: 'reportes', component: ReporteComponent },
-    { path: 'reportes_servicio', component: ReportServiceComponent },
 
-    
-    { path: 'servicios', component: ServicioComponent },
-    { path: 'servicio', component: AddServicioComponent },
-    { path: 'servicio/:id', component: AddServicioComponent },
+    { path: 'ingreso', component: IngresoComponent,canActivate: [authGuard]  },
+    { path: 'ingreso/:id', component: IngresoComponent,canActivate: [authGuard]  },
+
+    { path: 'movimientos', component: MovimientoComponent,canActivate: [authGuard]  },
+
+    { path: 'vista/:id', component: VistaComponent,canActivate: [authGuard]  },
+
+    { path: 'reportes', component: ReporteComponent ,canActivate: [authGuard] },
+    { path: 'reportes_servicio', component: ReportServiceComponent ,canActivate: [authGuard] },
 
     
+    { path: 'servicios', component: ServicioComponent ,canActivate: [authGuard] },
+    { path: 'servicio', component: AddServicioComponent ,canActivate: [authGuard] },
+    { path: 'servicio/:id', component: AddServicioComponent ,canActivate: [authGuard] },
 
-    { path: '**', redirectTo: 'login' },
+ // Ruta para manejo de errores, cuando la ruta no se encuentra
+ { path: '**', component: DashboardComponent,canActivate: [authGuard]  }, // Redirige a una página de error si la ruta no es válida
+
+ { path: '', redirectTo: '/dashboard', pathMatch: 'full' }, // Redirige al login si la ruta está vacía
 ];
