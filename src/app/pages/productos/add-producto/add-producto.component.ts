@@ -1,4 +1,3 @@
-
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -11,6 +10,7 @@ import { UnidadMedida } from '../../../models/unidad-medida';
 import { MarcaService } from '../../../services/marca.service';
 import { TipoService } from '../../../services/tipo.service';
 import { UnidadService } from '../../../services/unidad.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-add-producto',
@@ -42,7 +42,7 @@ export class AddProductoComponent implements OnInit {
     // Inicializar formulario
     this.productoForm = this.fb.group({
       name: ['', [Validators.required]],
-      price: [null, [Validators.min(0)]],
+      price: [0, [Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
       vencimiento: [''],
       observation: [''],
@@ -105,11 +105,16 @@ export class AddProductoComponent implements OnInit {
 
     } else {
       // Crear nueva tipo
-      this.productoService.create(proData).subscribe((res) => {
-        this.productoForm.reset();
-        alert('Articulo creada exitosamente');
-        //this.router.navigate(['/productos']);
-
+      this.productoService.create(proData).subscribe({
+        next: (res: any) => {
+          this.productoForm.reset();
+          alert('Articulo creado exitosamente');
+        },
+        error: (err: any) => {
+          if (err.error) {
+            alert(err.error.message);
+          }
+        }
       });
     }
 

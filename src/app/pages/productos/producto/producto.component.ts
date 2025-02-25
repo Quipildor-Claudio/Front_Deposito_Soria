@@ -25,7 +25,7 @@ export class ProductoComponent implements OnInit {
   totalItems: number = 0;
   totalPages: number = 0;
   currentPage: number = 1;
-  limit: number = 10;
+  limit: number = 30;
 
 
   ngOnInit(): void {
